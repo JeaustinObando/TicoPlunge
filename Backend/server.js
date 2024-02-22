@@ -35,7 +35,6 @@ MongoClient.connect(mongoURI)
 
     // Ruta para manejar las solicitudes POST a /comentarios
     app.post("/comentarios", (req, res) => {
-      console.log("req:", req.body);
 
       // Extraer los datos del comentario del cuerpo de la solicitud
       const comentario = req.body;
