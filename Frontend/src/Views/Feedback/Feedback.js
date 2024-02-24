@@ -21,7 +21,7 @@ const Feedback = () => {
   }, []); // El segundo argumento vacío asegura que se llame solo una vez al cargar la página
 
   // -------------------------------------------------------------
-  // crea las variables
+  // crea los comentarios en la base de datos
   // -------------------------------------------------------------
   const createComentariosBD = async () => {
     var newComentario = {
@@ -48,35 +48,103 @@ const Feedback = () => {
     }
   };
 
+  // // -------------------------------------------------------------
+  // // seleciona los comentarios de la base de datos
+  // // -------------------------------------------------------------
+  // const selectComentariosBD = async () => {
+  //   const serviceUrl = "http://localhost:8080/comentarios";
+  //   const config = {
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //   };
+
+  //   try {
+  //     const response = await axios.get(serviceUrl, config);
+  //     const varList = response.data;
+
+  //     let variablesToRender;
+  //     if (varList.length < 1) {
+  //       variablesToRender = "No hay datos";
+  //     } else {
+  //       variablesToRender = varList.map((variable) => (
+  //         <div key={variable._id}>
+  //           <p>Comentario: {variable.comentario}</p>
+  //         </div>
+  //       ));
+  //     }
+
+  //     setshowVariables(variablesToRender);
+  //   } catch (error) {
+  //     console.error("Error fetching data:", error);
+  //   }
+  // };
+
   // -------------------------------------------------------------
-  // seleciona
+  // seleciona las variables y les agrega un boton de borrar a la par
   // -------------------------------------------------------------
   const selectComentariosBD = async () => {
     const serviceUrl = "http://localhost:8080/comentarios";
-    const config = {
+    let config = {
       headers: {
         "Content-Type": "application/json",
       },
     };
 
     try {
-      const response = await axios.get(serviceUrl, config);
-      const varList = response.data;
+      let response = await axios.get(serviceUrl, config);
 
-      let variablesToRender;
-      if (varList.length < 1) {
-        variablesToRender = "No hay datos";
-      } else {
-        variablesToRender = varList.map((variable) => (
-          <div key={variable._id}>
-            <p>Comentario: {variable.comentario}</p>
-          </div>
+      if (response.data.length > 0) {
+        let varList = response.data.map((item) => (
+          <li key={item.id}>
+            {item.id} Nombre: {item.comentario}
+            <button
+              className="btn btn-danger m-4"
+              onClick={() => deleteComentariosBD(item._id)}
+            >
+              Borrar
+            </button>
+          </li>
         ));
-      }
 
-      setshowVariables(variablesToRender);
+        setshowVariables(varList);
+      } else {
+        setshowVariables(<i>No hay datos</i>);
+      }
     } catch (error) {
       console.error("Error fetching data:", error);
+    }
+  };
+
+  // -------------------------------------------------------------
+  // borra una variable
+  // -------------------------------------------------------------
+  const deleteComentariosBD = async (id) => {
+    const serviceUrl = `http://localhost:8080/comentarios/${id}`;
+    try {
+      const response = await axios.delete(serviceUrl);
+      alert("Borrado con éxito");
+      selectComentariosBD();
+    } catch (error) {
+      if (error.response) {
+        // La solicitud fue realizada pero el servidor respondió con un código de error
+        console.error(
+          "Error en la respuesta del servidor:",
+          error.response.data
+        );
+        alert("Error: No se pudo borrar la variable.");
+      } else if (error.request) {
+        // La solicitud se hizo pero no se recibió respuesta
+        console.error("No se recibió respuesta del servidor:", error.request);
+        alert("Error: No se pudo conectar al servidor.");
+      } else {
+        // Un error ocurrió durante la configuración de la solicitud
+        console.error(
+          "Error durante la configuración de la solicitud:",
+          error.message
+        );
+        alert("Error: Ocurrió un problema durante la solicitud.");
+      }
     }
   };
 
