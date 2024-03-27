@@ -28,6 +28,10 @@ function Navbar() {
         <Link to="/Feedback" className="link-navbar">
           Feedback
         </Link>
+
+        <Link to="/CreateClass" className="link-navbar">
+          Crear Clase
+        </Link>
       </div>
     </div>
   );

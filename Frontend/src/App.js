@@ -2,6 +2,8 @@ import "./App.css";
 import { BrowserRouter, Form, Route, Routes } from "react-router-dom";
 import Layout from "./Components/Layout";
 import Forms from "./Views/Feedback/Feedback";
+import Home from "./Views/Home/Home";
+import CreateClass from "./Views/CreateClass/CreateClass";
 
 function App() {
   function NotFound() {
@@ -19,8 +21,9 @@ function App() {
       <BrowserRouter>
         <Routes>
           <Route path="/" element={<Layout />}>
-            <Route index element={<Forms />} />
+            <Route index element={<Home />} />
             <Route path="/Feedback" element={<Forms />} />
+            <Route path="/CreateClass" element={<CreateClass />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

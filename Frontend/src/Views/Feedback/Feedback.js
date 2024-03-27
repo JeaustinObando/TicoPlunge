@@ -4,9 +4,14 @@ import "./Feedback.css";
 
 const Feedback = () => {
   // -------------------------------------------------------------
+  // Variables basura que hay q borrar solo son para probar
+  // -------------------------------------------------------------
+  const [usuarioActivo, setUsuarioActivo] = useState(["Usuario No Dado"]);
+
+  // -------------------------------------------------------------
   // Estas se mostraran en el HTML
   // -------------------------------------------------------------
-  const [showVariables, setshowVariables] = useState(["sii"]);
+  const [showVariables, setshowVariables] = useState([""]);
 
   // -------------------------------------------------------------
   // Seran input
@@ -24,61 +29,36 @@ const Feedback = () => {
   // crea los comentarios en la base de datos
   // -------------------------------------------------------------
   const createComentariosBD = async () => {
-    var newComentario = {
-      comentario: inputComentario,
-    };
+    const confirmacion = window.confirm("¿Está seguro de crear el comentario?");
 
-    if (newComentario.comentario === "") {
-      alert("Debe ingresar un comentario.");
-    } else {
-      try {
-        const serviceUrl = "http://localhost:8080/comentarios";
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
+    if (confirmacion) {
+      var newComentario = {
+        comentario: inputComentario,
+        usuario: usuarioActivo,
+      };
 
-        const response = await axios.post(serviceUrl, newComentario, config);
-        alert("Agregado con éxito");
-        selectComentariosBD(); // para cargarlas en pantalla automáticamente después de crearlas
-      } catch (error) {
-        console.error("Error al insertar documento en MongoDB:", error);
+      if (newComentario.comentario === "" || newComentario.usuario === "") {
+        alert("Debe ingresar todos los datos.");
+      } else {
+        try {
+          const serviceUrl = "http://localhost:8080/comentarios";
+          const config = {
+            headers: {
+              "Content-Type": "application/json",
+            },
+          };
+
+          const response = await axios.post(serviceUrl, newComentario, config);
+          alert("Agregado con éxito");
+          selectComentariosBD(); // para cargarlas en pantalla automáticamente después de crearlas
+        } catch (error) {
+          console.error("Error al insertar documento en MongoDB:", error);
+        }
       }
+    } else {
+      alert("Acción cancelada.");
     }
   };
-
-  // // -------------------------------------------------------------
-  // // seleciona los comentarios de la base de datos
-  // // -------------------------------------------------------------
-  // const selectComentariosBD = async () => {
-  //   const serviceUrl = "http://localhost:8080/comentarios";
-  //   const config = {
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //   };
-
-  //   try {
-  //     const response = await axios.get(serviceUrl, config);
-  //     const varList = response.data;
-
-  //     let variablesToRender;
-  //     if (varList.length < 1) {
-  //       variablesToRender = "No hay datos";
-  //     } else {
-  //       variablesToRender = varList.map((variable) => (
-  //         <div key={variable._id}>
-  //           <p>Comentario: {variable.comentario}</p>
-  //         </div>
-  //       ));
-  //     }
-
-  //     setshowVariables(variablesToRender);
-  //   } catch (error) {
-  //     console.error("Error fetching data:", error);
-  //   }
-  // };
 
   // -------------------------------------------------------------
   // seleciona las variables y les agrega un boton de borrar a la par
@@ -96,15 +76,17 @@ const Feedback = () => {
 
       if (response.data.length > 0) {
         let varList = response.data.map((item) => (
-          <li key={item.id}>
-            {item.id} Nombre: {item.comentario}
+          <div key={item.id} className="boxFeedBack">
+            <span className="usuarioName">{item.usuario}</span>
+            <br></br>
+            <span className="FeedBack">Comentario: {item.comentario}</span>
             <button
               className="btn btn-danger m-4"
               onClick={() => deleteComentariosBD(item._id)}
             >
               Borrar
             </button>
-          </li>
+          </div>
         ));
 
         setshowVariables(varList);
@@ -120,31 +102,37 @@ const Feedback = () => {
   // borra una variable
   // -------------------------------------------------------------
   const deleteComentariosBD = async (id) => {
-    const serviceUrl = `http://localhost:8080/comentarios/${id}`;
-    try {
-      const response = await axios.delete(serviceUrl);
-      alert("Borrado con éxito");
-      selectComentariosBD();
-    } catch (error) {
-      if (error.response) {
-        // La solicitud fue realizada pero el servidor respondió con un código de error
-        console.error(
-          "Error en la respuesta del servidor:",
-          error.response.data
-        );
-        alert("Error: No se pudo borrar la variable.");
-      } else if (error.request) {
-        // La solicitud se hizo pero no se recibió respuesta
-        console.error("No se recibió respuesta del servidor:", error.request);
-        alert("Error: No se pudo conectar al servidor.");
-      } else {
-        // Un error ocurrió durante la configuración de la solicitud
-        console.error(
-          "Error durante la configuración de la solicitud:",
-          error.message
-        );
-        alert("Error: Ocurrió un problema durante la solicitud.");
+    const confirmacion = window.confirm("¿Está seguro de crear el comentario?");
+
+    if (confirmacion) {
+      const serviceUrl = `http://localhost:8080/comentarios/${id}`;
+      try {
+        const response = await axios.delete(serviceUrl);
+        alert("Borrado con éxito");
+        selectComentariosBD();
+      } catch (error) {
+        if (error.response) {
+          // La solicitud fue realizada pero el servidor respondió con un código de error
+          console.error(
+            "Error en la respuesta del servidor:",
+            error.response.data
+          );
+          alert("Error: No se pudo borrar la variable.");
+        } else if (error.request) {
+          // La solicitud se hizo pero no se recibió respuesta
+          console.error("No se recibió respuesta del servidor:", error.request);
+          alert("Error: No se pudo conectar al servidor.");
+        } else {
+          // Un error ocurrió durante la configuración de la solicitud
+          console.error(
+            "Error durante la configuración de la solicitud:",
+            error.message
+          );
+          alert("Error: Ocurrió un problema durante la solicitud.");
+        }
       }
+    } else {
+      alert("Acción cancelada.");
     }
   };
 

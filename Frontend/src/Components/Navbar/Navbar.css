@@ -77,7 +77,7 @@
 
 /* Aplicar estilos hover a elementos con clase .link-navbar dentro de .containe-navbar */
 .containe-navbar:hover > *:not(.link-navbar:hover):not(.labelColor-navbar:hover):not(.buttonBackground:hover) {
-  transition: 300ms;
+  transition: 2000ms;
   filter: blur(1px);
   transform: scale(0.95, 0.95);
 }
