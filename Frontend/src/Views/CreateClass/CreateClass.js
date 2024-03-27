@@ -33,39 +33,31 @@ const CreateClass = () => {
   useEffect(() => {}, []); // El segundo argumento vacío asegura que se llame solo una vez al cargar la página
 
   const createClassBD = async (date, hour, usuario) => {
-    const confirmacion = window.confirm("¿Está seguro?");
+    var newClass = {
+      date: date,
+      hour: hour,
+      usuario: usuario,
+    };
 
-    if (confirmacion) {
-      var newClass = {
-        date: date,
-        hour: hour,
-        usuario: usuario,
-      };
-
-      if (
-        newClass.date === "" ||
-        newClass.hour === "" ||
-        newClass.usuario === ""
-      ) {
-        alert("Debe ingresar todos los datos.");
-      } else {
-        try {
-          const serviceUrl = "http://localhost:8080/comentarios";
-          const config = {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          };
-
-          const response = await axios.post(serviceUrl, newClass, config);
-          alert("Agregado con éxito");
-          //   selectComentariosBD(); // para cargarlas en pantalla automáticamente después de crearlas
-        } catch (error) {
-          console.error("Error al insertar documento en MongoDB:", error);
-        }
-      }
+    if (
+      newClass.date === "" ||
+      newClass.hour === "" ||
+      newClass.usuario === ""
+    ) {
+      alert("Debe ingresar todos los datos.");
     } else {
-      alert("Acción cancelada.");
+      try {
+        const serviceUrl = "http://localhost:8080/comentarios";
+        const config = {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        };
+
+        const response = await axios.post(serviceUrl, newClass, config);
+      } catch (error) {
+        console.error("Error al insertar documento en MongoDB:", error);
+      }
     }
   };
 
@@ -105,75 +97,98 @@ const CreateClass = () => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    createAppointments();
+    const confirmacion = window.confirm("¿Está seguro?");
+
+    if (confirmacion) {
+      createAppointments();
+    } else {
+      alert("Acción cancelada.");
+    }
   };
 
   return (
-    <div className="createClassForm">
-      <h2>Crear Clase</h2>
-      <appointments></appointments>
-      <form onSubmit={handleSubmit}>
-        <div className="formGroup">
+    <div className="form-container">
+      <h2 className="title">Crear Clase</h2>
+      <div className="social-message">
+        <div className="line"></div>
+        <div className="message">Tus citas programadas</div>
+        <div className="line"></div>
+      </div>
+      <form onSubmit={handleSubmit} className="form-CreateClass">
+        <div className="input-group-CreateClass">
           <label htmlFor="inputActivity">Actividad:</label>
-          <select id="inputActivity">
+          <select id="inputActivity" className="select-CreateClass">
             <option value="">Seleccione una opcion</option>
             <option value="box">Box</option>
             <option value="plunche">Plunche</option>
             <option value="baile">Baile</option>
           </select>
         </div>
-
-        <div className="formGroup">
+  
+        <div className="input-group-CreateClass">
           <label htmlFor="inputDate">Fecha:</label>
           <input
             type="date"
             id="inputDate"
             value={inputDate}
             onChange={(e) => setinputDate(e.target.value)}
+            className="input-group-CreateClass input"
           />
         </div>
-
-        <div className="formGroup">
+  
+        <div className="input-group-CreateClass">
           <label htmlFor="inputHour">Hora:</label>
           <input
             type="time"
             id="inputHour"
             value={inputHour}
             onChange={(e) => setinputHour(e.target.value)}
+            className="input-group-CreateClass input"
           />
         </div>
-
-        <div className="formGroup">
+  
+        <div className="input-group-CreateClass">
           <label htmlFor="inputRepeatEvery">Repetir cada (minutos):</label>
           <input
             type="number"
             id="inputRepeatEvery"
             value={inputRepeatEveryMinutes}
             onChange={(e) => setinputRepeatEveryMinutes(e.target.value)}
+            className="input-group-CreateClass input"
+            min="1"
+            max="100"
           />
         </div>
-
-        <div className="formGroup">
+  
+        <div className="input-group-CreateClass">
           <label htmlFor="inputRepeatFor">Repetir por (veces):</label>
           <input
             type="number"
             id="inputRepeatFor"
             value={inputRepeatNTimes}
             onChange={(e) => setinputRepeatNTimes(e.target.value)}
+            className="input-group-CreateClass input"
+            min="1"
+            max="100"
           />
         </div>
-
-        <div className="formGroup">
+  
+        <div className="input-group-CreateClass">
           <label htmlFor="inputRepeatWeekly">Repetir cada (semanas):</label>
           <input
             type="number"
             id="inputRepeatWeekly"
             value={inputRepeatWeekly}
             onChange={(e) => setinputRepeatWeekly(e.target.value)}
+            className="input-group-CreateClass input"
+            min="1"
+            max="100"
           />
         </div>
-
-        <button type="submit">Crear Clase</button>
+  
+        <button type="submit" className="buttomCreate">
+          Crear Clase
+        </button>
       </form>
     </div>
   );
