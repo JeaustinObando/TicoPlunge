@@ -4,6 +4,7 @@ import Layout from "./Components/Layout";
 import Forms from "./Views/Feedback/Feedback";
 import Home from "./Views/Home/Home";
 import CreateClass from "./Views/CreateClass/CreateClass";
+import AppointmentForm from "./Views/AppointmentForm/AppointmentForm";
 
 function App() {
   function NotFound() {
@@ -24,6 +25,7 @@ function App() {
             <Route index element={<Home />} />
             <Route path="/Feedback" element={<Forms />} />
             <Route path="/CreateClass" element={<CreateClass />} />
+            <Route path="/AppointmentForm" element={<AppointmentForm />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

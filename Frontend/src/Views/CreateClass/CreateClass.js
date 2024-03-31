@@ -9,13 +9,9 @@ const CreateClass = () => {
   const [usuarioActivo, setUsuarioActivo] = useState(["Usuario No Dado"]);
 
   // -------------------------------------------------------------
-  // Estas se mostraran en el HTML
-  // -------------------------------------------------------------
-  const [showVariables, setshowVariables] = useState([""]);
-
-  // -------------------------------------------------------------
   // Seran input
   // -------------------------------------------------------------
+  const [inputActivity, setinputActivity] = useState("");
   const [inputDate, setinputDate] = useState("");
   const [inputHour, setinputHour] = useState("");
   const [inputRepeatEveryMinutes, setinputRepeatEveryMinutes] = useState(30);
@@ -23,20 +19,16 @@ const CreateClass = () => {
   const [inputRepeatWeekly, setinputRepeatWeekly] = useState(1);
 
   // -------------------------------------------------------------
-  // Para Almacenar
-  // -------------------------------------------------------------
-  const [appointments, setAppointments] = useState([]);
-
-  // -------------------------------------------------------------
   // Cada vez que carga la pantalla
   // -------------------------------------------------------------
   useEffect(() => {}, []); // El segundo argumento vacío asegura que se llame solo una vez al cargar la página
 
-  const createClassBD = async (date, hour, usuario) => {
+  const createClassBD = async (date, hour, usuario, activity) => {
     var newClass = {
       date: date,
       hour: hour,
       usuario: usuario,
+      activity: activity,
     };
 
     if (
@@ -87,11 +79,14 @@ const CreateClass = () => {
       }
     }
 
-    setAppointments(newAppointments); // Actualizar el estado con las nuevas citas
-
     // Llamar a createClass para cada cita generada
     newAppointments.forEach((appointment) => {
-      createClassBD(appointment.date, appointment.hour, appointment.usuario);
+      createClassBD(
+        appointment.date,
+        appointment.hour,
+        usuarioActivo,
+        inputActivity
+      );
     });
   };
 
@@ -117,14 +112,19 @@ const CreateClass = () => {
       <form onSubmit={handleSubmit} className="form-CreateClass">
         <div className="input-group-CreateClass">
           <label htmlFor="inputActivity">Actividad:</label>
-          <select id="inputActivity" className="select-CreateClass">
+          <select
+            id="inputActivity"
+            className="select-CreateClass"
+            value={inputActivity}
+            onChange={(e) => setinputActivity(e.target.value)}
+          >
             <option value="">Seleccione una opcion</option>
             <option value="box">Box</option>
             <option value="plunche">Plunche</option>
             <option value="baile">Baile</option>
           </select>
         </div>
-  
+
         <div className="input-group-CreateClass">
           <label htmlFor="inputDate">Fecha:</label>
           <input
@@ -135,7 +135,7 @@ const CreateClass = () => {
             className="input-group-CreateClass input"
           />
         </div>
-  
+
         <div className="input-group-CreateClass">
           <label htmlFor="inputHour">Hora:</label>
           <input
@@ -146,7 +146,7 @@ const CreateClass = () => {
             className="input-group-CreateClass input"
           />
         </div>
-  
+
         <div className="input-group-CreateClass">
           <label htmlFor="inputRepeatEvery">Repetir cada (minutos):</label>
           <input
@@ -159,7 +159,7 @@ const CreateClass = () => {
             max="100"
           />
         </div>
-  
+
         <div className="input-group-CreateClass">
           <label htmlFor="inputRepeatFor">Repetir por (veces):</label>
           <input
@@ -172,7 +172,7 @@ const CreateClass = () => {
             max="100"
           />
         </div>
-  
+
         <div className="input-group-CreateClass">
           <label htmlFor="inputRepeatWeekly">Repetir cada (semanas):</label>
           <input
@@ -185,7 +185,7 @@ const CreateClass = () => {
             max="100"
           />
         </div>
-  
+
         <button type="submit" className="buttomCreate">
           Crear Clase
         </button>

@@ -32,6 +32,11 @@ function Navbar() {
         <Link to="/CreateClass" className="link-navbar">
           Crear Clase
         </Link>
+
+        <Link to="/AppointmentForm" className="link-navbar">
+          Reservar
+        </Link>
+
       </div>
     </div>
   );

@@ -90,3 +90,15 @@
   line-height: 1.25rem;
   color: rgba(156, 163, 175, 1);
 }
+
+.input-group-CreateClass[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  border-radius: 50%;
+  padding: 4px;
+}
+
+.input-group-CreateClass[type="time"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+  border-radius: 50%;
+  padding: 4px;
+}

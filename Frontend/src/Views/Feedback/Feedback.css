@@ -1,0 +1,11 @@
+.usuarioName {
+  text-decoration: underline;
+  color: blue;
+}
+
+.boxFeedBack {
+  border: 1px solid black;
+  text-align: left;
+  padding: 1rem;
+  margin-bottom: 2rem;
+}
