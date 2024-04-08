@@ -1,9 +1,8 @@
-# Plantilla React de Isaac Meléndez
+# TicoPlunche
 
 ## Información del Proyecto
 
-- Fecha de Creación: 1 de septiembre de 2023
-- Última Edición: 18 de octubre de 2023
+- Última Edición: 8 / 4/ 2024
 
 ## Tecnologías Utilizadas
 
