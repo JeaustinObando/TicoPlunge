@@ -6,8 +6,8 @@
 
 ## Tecnologías Utilizadas
 
-- React (^18.2.0) con react-router-dom
-- Bootstrap
+- Node
+- Express
 - Mongo
 
 ## Instrucciones para Iniciar la Aplicación
@@ -16,7 +16,7 @@ Siga estos pasos para ejecutar la aplicación en su máquina local.
 
 ### 1. Instalación de Dependencias
 
-Primero, navegue hasta el directorio del proyecto frontend y ejecute el siguiente comando para instalar las dependencias necesarias:
+Primero, navegue hasta el directorio del proyecto backend y ejecute el siguiente comando para instalar las dependencias necesarias:
 
 ```
 npm install
@@ -24,13 +24,13 @@ npm install
 
 Luego una vez instaladas las dependencias 
 ```
-npm start
+node server.js
 ```
 
 por defecto corre en el puerto: 
 
-### http://localhost:3000/
+### http://localhost:8080/
 
-Se debe ejecutar junto con el backend para que funcione correctamente
+Se debe ejecutar junto con el frontend para que funcione correctamente
 
 ## Isaac Meléndez Gatgens
