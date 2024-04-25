@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./AppointmentForm.css";
 
+const baseUrl = "http://localhost:8080";
+
 const AppointmentForm = () => {
   // -------------------------------------------------------------
   // Variables basura que hay q borrar solo son para probar
@@ -26,7 +28,7 @@ const AppointmentForm = () => {
   // seleciona las variables y les agrega un boton de borrar a la par
   // -------------------------------------------------------------
   const selectClassBD = async () => {
-    const serviceUrl = "http://localhost:8080/comentarios";
+    const serviceUrl = `${baseUrl}/comentarios`;
     let config = {
       headers: {
         "Content-Type": "application/json",
@@ -57,6 +59,10 @@ const AppointmentForm = () => {
               <span>Hora: {item.hour}</span>
               <br />
               <span>Fecha: {item.date}</span>
+              <br />
+              <span>Cupos disponibles: {item.capacity}</span>
+              <br />
+              <span>Actividad: {item.activity}</span>
               <button
                 className="btn btn-primary m-4"
                 onClick={() => reserve(item._id)}

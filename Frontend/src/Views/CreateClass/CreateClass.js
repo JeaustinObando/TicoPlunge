@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import "./CreateClass.css";
 
+const baseUrl = "http://localhost:8080";
+
 const CreateClass = () => {
   // -------------------------------------------------------------
   // Variables basura que hay q borrar solo son para probar
@@ -17,80 +19,128 @@ const CreateClass = () => {
   const [inputRepeatEveryMinutes, setinputRepeatEveryMinutes] = useState(30);
   const [inputRepeatNTimes, setinputRepeatNTimes] = useState(1);
   const [inputRepeatWeekly, setinputRepeatWeekly] = useState(1);
+  const [inputCapacity, setInputCapacity] = useState(10);
 
   // -------------------------------------------------------------
   // Cada vez que carga la pantalla
   // -------------------------------------------------------------
   useEffect(() => {}, []); // El segundo argumento vacío asegura que se llame solo una vez al cargar la página
 
-  const createClassBD = async (date, hour, usuario, activity) => {
-    var newClass = {
+  // -------------------------------------------------------------
+  // Crea las clases en la base de datos que se generaron en createAppointments
+  // -------------------------------------------------------------
+  const createClassBD = async (date, hour, usuario, activity, capacity) => {
+    const newClass = {
       date: date,
       hour: hour,
       usuario: usuario,
       activity: activity,
+      capacity: capacity,
     };
 
     if (
       newClass.date === "" ||
       newClass.hour === "" ||
-      newClass.usuario === ""
+      newClass.usuario === "" ||
+      newClass.capacity === 0
     ) {
       alert("Debe ingresar todos los datos.");
-    } else {
-      try {
-        const serviceUrl = "http://localhost:8080/comentarios";
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
+      return false; // Retorna false si falta algún dato
+    }
 
-        const response = await axios.post(serviceUrl, newClass, config);
-      } catch (error) {
-        console.error("Error al insertar documento en MongoDB:", error);
-      }
+    try {
+      const serviceUrl = `${baseUrl}/comentarios`;
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      };
+
+      const response = await axios.post(serviceUrl, newClass, config);
+      return true; // Retorna true si se crea con éxito
+    } catch (error) {
+      console.error("Error al insertar documento en MongoDB:", error);
+      return false; // Retorna false si hay un error
     }
   };
 
-  const createAppointments = () => {
+  // const createAppointments = () => {
+  //   const initialDate = new Date(`${inputDate}T${inputHour}:00`);
+
+  //   const newAppointments = [];
+
+  //   for (let i = 0; i < inputRepeatNTimes; i++) {
+  //     const newDate = new Date(
+  //       initialDate.getTime() + i * inputRepeatEveryMinutes * 60000
+  //     );
+
+  //     for (let j = 0; j < inputRepeatWeekly; j++) {
+  //       const finalDate = new Date(
+  //         newDate.getTime() + j * 7 * 24 * 60 * 60 * 1000
+  //       );
+
+  //       const formattedDate = finalDate.toISOString().split("T")[0];
+  //       const formattedHour = finalDate.toTimeString().split(" ")[0];
+
+  //       newAppointments.push({
+  //         date: formattedDate,
+  //         hour: formattedHour,
+  //         usuario: usuarioActivo,
+  //       });
+  //     }
+  //   }
+
+  // -------------------------------------------------------------
+  // Crea n cantidad de Appointments segun el form
+  // -------------------------------------------------------------
+  const createAppointments = async () => {
     const initialDate = new Date(`${inputDate}T${inputHour}:00`);
-
     const newAppointments = [];
-
+  
     for (let i = 0; i < inputRepeatNTimes; i++) {
       const newDate = new Date(
         initialDate.getTime() + i * inputRepeatEveryMinutes * 60000
       );
-
+  
       for (let j = 0; j < inputRepeatWeekly; j++) {
         const finalDate = new Date(
-          newDate.getTime() + j * 7 * 24 * 60 * 60 * 1000
+          newDate.getTime() + j * 7 * 24 * 60 * 60 * 1000 // Ajustar aquí para cambiar las fechas cada semana
         );
-
+  
         const formattedDate = finalDate.toISOString().split("T")[0];
         const formattedHour = finalDate.toTimeString().split(" ")[0];
-
+  
         newAppointments.push({
           date: formattedDate,
           hour: formattedHour,
-          usuario: usuarioActivo,
         });
       }
     }
+    let allCreated = true;
 
-    // Llamar a createClass para cada cita generada
-    newAppointments.forEach((appointment) => {
-      createClassBD(
+    for (const appointment of newAppointments) {
+      const success = await createClassBD(
         appointment.date,
         appointment.hour,
         usuarioActivo,
-        inputActivity
+        inputActivity,
+        inputCapacity // Pasar la capacidad al método
       );
-    });
+
+      if (!success) {
+        allCreated = false;
+        break;
+      }
+    }
+
+    if (allCreated) {
+      alert("Todos creados con éxito");
+    } else {
+      alert("Algunos no se pudieron crear");
+    }
   };
 
-  const handleSubmit = (e) => {
+  const confirmCreateClass = (e) => {
     e.preventDefault();
     const confirmacion = window.confirm("¿Está seguro?");
 
@@ -109,9 +159,9 @@ const CreateClass = () => {
         <div className="message">Tus citas programadas</div>
         <div className="line"></div>
       </div>
-      <form onSubmit={handleSubmit} className="form-CreateClass">
+      <form onSubmit={confirmCreateClass} className="form-CreateClass">
         <div className="input-group-CreateClass">
-          <label htmlFor="inputActivity">Actividad:</label>
+          <label For="inputActivity">Actividad:</label>
           <select
             id="inputActivity"
             className="select-CreateClass"
@@ -126,7 +176,7 @@ const CreateClass = () => {
         </div>
 
         <div className="input-group-CreateClass">
-          <label htmlFor="inputDate">Fecha:</label>
+          <label For="inputDate">Fecha:</label>
           <input
             type="date"
             id="inputDate"
@@ -137,7 +187,7 @@ const CreateClass = () => {
         </div>
 
         <div className="input-group-CreateClass">
-          <label htmlFor="inputHour">Hora:</label>
+          <label For="inputHour">Hora:</label>
           <input
             type="time"
             id="inputHour"
@@ -148,7 +198,19 @@ const CreateClass = () => {
         </div>
 
         <div className="input-group-CreateClass">
-          <label htmlFor="inputRepeatEvery">Repetir cada (minutos):</label>
+          <label For="inputCapacity">Cantidad de cupos:</label>
+          <input
+            type="number"
+            id="inputCapacity"
+            value={inputCapacity}
+            onChange={(e) => setInputCapacity(e.target.value)}
+            min="1"
+            max="100"
+          />
+        </div>
+
+        <div className="input-group-CreateClass">
+          <label For="inputRepeatEvery">Repetir cada (minutos):</label>
           <input
             type="number"
             id="inputRepeatEvery"
@@ -161,7 +223,9 @@ const CreateClass = () => {
         </div>
 
         <div className="input-group-CreateClass">
-          <label htmlFor="inputRepeatFor">Repetir por (veces):</label>
+          <label For="inputRepeatFor">
+            Repetir por (veces segun la cantidad de minutos anterior):
+          </label>
           <input
             type="number"
             id="inputRepeatFor"
@@ -174,7 +238,9 @@ const CreateClass = () => {
         </div>
 
         <div className="input-group-CreateClass">
-          <label htmlFor="inputRepeatWeekly">Repetir cada (semanas):</label>
+          <label For="inputRepeatWeekly">
+            Repetir cantidad todo lo anterior (semanas consecutivas):
+          </label>
           <input
             type="number"
             id="inputRepeatWeekly"
