@@ -1,17 +1,16 @@
-.homeStyle{ 
-    background-color: rgb(16, 15, 15);
-    color: white;
-    padding-top: 20px;
-    padding-bottom: 20px;
+.homeStyle {
+  background-color: rgb(16, 15, 15);
+  color: white;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 
 .bg-image {
-    background-image: url('https://png.pngtree.com/thumb_back/fw800/background/20230616/pngtree-luxury-bathroom-design-featuring-a-large-bathtub-and-striking-black-marble-image_3601729.jpg');
-    background-size: cover;
-    min-height: 50vh;
+  background-image: url("https://png.pngtree.com/thumb_back/fw800/background/20230616/pngtree-luxury-bathroom-design-featuring-a-large-bathtub-and-striking-black-marble-image_3601729.jpg");
+  background-size: cover;
+  min-height: 50vh;
 }
 
 .row:nth-child(even) .bg-image {
-    background-image: none;
+  background-image: none;
 }
-

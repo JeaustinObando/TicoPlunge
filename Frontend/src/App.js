@@ -1,10 +1,10 @@
 import "./App.css";
-import { BrowserRouter,  Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./Components/Layout";
-import Forms from "./Views/Feedback/Feedback";
+import FeedbackAdmin from "./Views/Feedback/FeedbackAdmin";
 import Home from "./Views/Home/Home";
 import CreateClass from "./Views/CreateClass/CreateClass";
-import AppointmentForm from "./Views/AppointmentForm/AppointmentForm";
+import Appointment from "./Views/Appointment/Appointment";
 
 function App() {
   function NotFound() {
@@ -23,9 +23,9 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="/Feedback" element={<Forms />} />
+            <Route path="/Feedback" element={<FeedbackAdmin />} />
             <Route path="/CreateClass" element={<CreateClass />} />
-            <Route path="/AppointmentForm" element={<AppointmentForm />} />
+            <Route path="/AppointmentForm" element={<Appointment />} />
             <Route path="*" element={<NotFound />} />
           </Route>
         </Routes>

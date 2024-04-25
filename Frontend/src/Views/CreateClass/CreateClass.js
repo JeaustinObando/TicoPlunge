@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./CreateClass.css";
-
-const baseUrl = "http://localhost:8080";
+import { urlClass } from "../../GlobalVariables";
 
 const CreateClass = () => {
   // -------------------------------------------------------------
@@ -13,13 +12,13 @@ const CreateClass = () => {
   // -------------------------------------------------------------
   // Seran input
   // -------------------------------------------------------------
-  const [inputActivity, setinputActivity] = useState("");
+  const [inputService, setinputService] = useState("");
   const [inputDate, setinputDate] = useState("");
   const [inputHour, setinputHour] = useState("");
-  const [inputRepeatEveryMinutes, setinputRepeatEveryMinutes] = useState(30);
-  const [inputRepeatNTimes, setinputRepeatNTimes] = useState(1);
-  const [inputRepeatWeekly, setinputRepeatWeekly] = useState(1);
-  const [inputCapacity, setInputCapacity] = useState(10);
+  const [inputRepeatEveryMinutes, setinputRepeatEveryMinutes] = useState("");
+  const [inputRepeatNTimes, setinputRepeatNTimes] = useState("");
+  const [inputRepeatWeekly, setinputRepeatWeekly] = useState("");
+  const [inputCapacity, setInputCapacity] = useState(0);
 
   // -------------------------------------------------------------
   // Cada vez que carga la pantalla
@@ -29,12 +28,12 @@ const CreateClass = () => {
   // -------------------------------------------------------------
   // Crea las clases en la base de datos que se generaron en createAppointments
   // -------------------------------------------------------------
-  const createClassBD = async (date, hour, usuario, activity, capacity) => {
+  const createClassBD = async (date, hour, usuario, service, capacity) => {
     const newClass = {
       date: date,
       hour: hour,
       usuario: usuario,
-      activity: activity,
+      service: service,
       capacity: capacity,
     };
 
@@ -49,7 +48,7 @@ const CreateClass = () => {
     }
 
     try {
-      const serviceUrl = `${baseUrl}/comentarios`;
+      const serviceUrl = urlClass;
       const config = {
         headers: {
           "Content-Type": "application/json",
@@ -64,52 +63,26 @@ const CreateClass = () => {
     }
   };
 
-  // const createAppointments = () => {
-  //   const initialDate = new Date(`${inputDate}T${inputHour}:00`);
-
-  //   const newAppointments = [];
-
-  //   for (let i = 0; i < inputRepeatNTimes; i++) {
-  //     const newDate = new Date(
-  //       initialDate.getTime() + i * inputRepeatEveryMinutes * 60000
-  //     );
-
-  //     for (let j = 0; j < inputRepeatWeekly; j++) {
-  //       const finalDate = new Date(
-  //         newDate.getTime() + j * 7 * 24 * 60 * 60 * 1000
-  //       );
-
-  //       const formattedDate = finalDate.toISOString().split("T")[0];
-  //       const formattedHour = finalDate.toTimeString().split(" ")[0];
-
-  //       newAppointments.push({
-  //         date: formattedDate,
-  //         hour: formattedHour,
-  //         usuario: usuarioActivo,
-  //       });
-  //     }
-  //   }
-
   // -------------------------------------------------------------
   // Crea n cantidad de Appointments segun el form
   // -------------------------------------------------------------
   const createAppointments = async () => {
     const initialDate = new Date(`${inputDate}T${inputHour}:00`);
     const newAppointments = [];
-  
+
     for (let i = 0; i < inputRepeatNTimes; i++) {
       const newDate = new Date(
         initialDate.getTime() + i * inputRepeatEveryMinutes * 60000
       );
-  
+
       for (let j = 0; j < inputRepeatWeekly; j++) {
         const finalDate = new Date(
           newDate.getTime() + j * 7 * 24 * 60 * 60 * 1000 // Ajustar aquí para cambiar las fechas cada semana
         );
-  
+
         const formattedDate = finalDate.toISOString().split("T")[0];
         const formattedHour = finalDate.toTimeString().split(" ")[0];
-  
+
         newAppointments.push({
           date: formattedDate,
           hour: formattedHour,
@@ -123,7 +96,7 @@ const CreateClass = () => {
         appointment.date,
         appointment.hour,
         usuarioActivo,
-        inputActivity,
+        inputService,
         inputCapacity // Pasar la capacidad al método
       );
 
@@ -161,12 +134,12 @@ const CreateClass = () => {
       </div>
       <form onSubmit={confirmCreateClass} className="form-CreateClass">
         <div className="input-group-CreateClass">
-          <label For="inputActivity">Actividad:</label>
+          <label htmlFor="inputActivity">Actividad:</label>
           <select
             id="inputActivity"
             className="select-CreateClass"
-            value={inputActivity}
-            onChange={(e) => setinputActivity(e.target.value)}
+            value={inputService}
+            onChange={(e) => setinputService(e.target.value)}
           >
             <option value="">Seleccione una opcion</option>
             <option value="box">Box</option>
@@ -176,18 +149,19 @@ const CreateClass = () => {
         </div>
 
         <div className="input-group-CreateClass">
-          <label For="inputDate">Fecha:</label>
+          <label htmlFor="inputDate">Fecha:</label>
           <input
             type="date"
             id="inputDate"
             value={inputDate}
             onChange={(e) => setinputDate(e.target.value)}
+            min={new Date().toISOString().split("T")[0]}
             className="input-group-CreateClass input"
           />
         </div>
 
         <div className="input-group-CreateClass">
-          <label For="inputHour">Hora:</label>
+          <label htmlFor="inputHour">Hora:</label>
           <input
             type="time"
             id="inputHour"
@@ -198,19 +172,19 @@ const CreateClass = () => {
         </div>
 
         <div className="input-group-CreateClass">
-          <label For="inputCapacity">Cantidad de cupos:</label>
+          <label htmlFor="inputCapacity">Cantidad de cupos:</label>
           <input
             type="number"
             id="inputCapacity"
             value={inputCapacity}
             onChange={(e) => setInputCapacity(e.target.value)}
             min="1"
-            max="100"
+            max="500"
           />
         </div>
 
         <div className="input-group-CreateClass">
-          <label For="inputRepeatEvery">Repetir cada (minutos):</label>
+          <label htmlFor="inputRepeatEvery">Repetir cada (minutos):</label>
           <input
             type="number"
             id="inputRepeatEvery"
@@ -218,12 +192,12 @@ const CreateClass = () => {
             onChange={(e) => setinputRepeatEveryMinutes(e.target.value)}
             className="input-group-CreateClass input"
             min="1"
-            max="100"
+            max="999"
           />
         </div>
 
         <div className="input-group-CreateClass">
-          <label For="inputRepeatFor">
+          <label htmlFor="inputRepeatFor">
             Repetir por (veces segun la cantidad de minutos anterior):
           </label>
           <input
@@ -238,7 +212,7 @@ const CreateClass = () => {
         </div>
 
         <div className="input-group-CreateClass">
-          <label For="inputRepeatWeekly">
+          <label htmlFor="inputRepeatWeekly">
             Repetir cantidad todo lo anterior (semanas consecutivas):
           </label>
           <input
@@ -248,7 +222,7 @@ const CreateClass = () => {
             onChange={(e) => setinputRepeatWeekly(e.target.value)}
             className="input-group-CreateClass input"
             min="1"
-            max="100"
+            max="52"
           />
         </div>
 

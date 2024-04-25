@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Feedback.css";
+import { urlFeedback } from "../../GlobalVariables";
 
-const baseUrl = "http://localhost:8080";
-
-const Feedback = () => {
+const FeedbackAdmin = () => {
   // -------------------------------------------------------------
   // Variables basura que hay q borrar solo son para probar
   // -------------------------------------------------------------
@@ -49,7 +48,7 @@ const Feedback = () => {
         alert("Debe ingresar todos los datos.");
       } else {
         try {
-          const serviceUrl = `${baseUrl}/comentarios`;
+          const serviceUrl = urlFeedback;
           const config = {
             headers: {
               "Content-Type": "application/json",
@@ -57,10 +56,11 @@ const Feedback = () => {
           };
 
           const response = await axios.post(serviceUrl, newComentario, config);
-          alert("Agregado con éxito");
+          alert("Comentario agregado con éxito");
           selectComentariosBD(); // para cargarlas en pantalla automáticamente después de crearlas
         } catch (error) {
           console.error("Error al insertar documento en MongoDB:", error);
+          alert("Error.");
         }
       }
     } else {
@@ -68,6 +68,9 @@ const Feedback = () => {
     }
   };
 
+  // -------------------------------------------------------------
+  // Cambia los numeros por estrellas para mostrar
+  // -------------------------------------------------------------
   const renderStars = (rating) => {
     const stars = [];
 
@@ -79,7 +82,11 @@ const Feedback = () => {
           </span>
         );
       } else {
-        stars.push(<span className="star" key={i}>☆</span>);
+        stars.push(
+          <span className="star" key={i}>
+            ☆
+          </span>
+        );
       }
     }
 
@@ -90,7 +97,7 @@ const Feedback = () => {
   // Carga los comentarios y les agrega un boton de borrar a la par
   // -------------------------------------------------------------
   const selectComentariosBD = async () => {
-    const serviceUrl = `${baseUrl}/comentarios`;
+    const serviceUrl = urlFeedback;
     let config = {
       headers: {
         "Content-Type": "application/json",
@@ -100,27 +107,7 @@ const Feedback = () => {
     try {
       let response = await axios.get(serviceUrl, config);
 
-      if (response.data.length > 0) {
-        let varList = response.data.map((item) => (
-          <div key={item.id} className="feedbackBox">
-            <span className="notititle">{item.usuario}</span>
-            <br></br>
-            <span>{renderStars(item.rating)}</span>
-            <br></br>
-            <span className="notibody">Comentario: {item.comentario}</span>
-            <button
-              className="btn btn-danger m-4"
-              onClick={() => deleteComentariosBD(item._id)}
-            >
-              Borrar
-            </button>
-          </div>
-        ));
-
-        setshowComentarios(varList);
-      } else {
-        setshowComentarios(<i>No hay comentario</i>);
-      }
+      setshowComentarios(response.data);
     } catch (error) {
       console.error("Error fetching data:", error);
     }
@@ -130,10 +117,12 @@ const Feedback = () => {
   // Borra un comentario
   // -------------------------------------------------------------
   const deleteComentariosBD = async (id) => {
-    const confirmacion = window.confirm("¿Está seguro de crear el comentario?");
+    const confirmacion = window.confirm(
+      "¿Está seguro de borrar el comentario?"
+    );
 
     if (confirmacion) {
-      const serviceUrl = `${baseUrl}/comentarios/${id}`;
+      const serviceUrl = `${urlFeedback}/${id}`;
       try {
         const response = await axios.delete(serviceUrl);
         alert("Borrado con éxito");
@@ -164,13 +153,37 @@ const Feedback = () => {
     }
   };
 
+  // -------------------------------------------------------------
+  // Llama a crear el comentario con la info del form
+  // -------------------------------------------------------------
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    if (!inputRating) {
+      alert("Debes seleccionar una calificación");
+      return;
+    }
+
+    if (!inputComentario) {
+      alert("Debes ingresar un comentario");
+      return;
+    }
+
+    createComentariosBD();
+  };
+
   return (
     <div className="container mt-5">
       <h1 className="mb-4">Comentarios</h1>
 
-      <div className="input-group mb-4">
-        <div className="input-group mb-4">
-          <div className="rating">
+      <div className="rating-card">
+        <form onSubmit={handleSubmit}>
+          <div className="text-wrapper">
+            <p className="text-primary">Deja tu comentario</p>
+            <p className="text-secondary">Nos gustaría saber tu opinión</p>
+          </div>
+
+          <div className="rating-stars-container">
             <input
               value="5"
               name="rate"
@@ -178,8 +191,14 @@ const Feedback = () => {
               type="radio"
               onChange={() => setInputRating("5")}
             />
-            <label title="text" htmlFor="star5"></label>
-
+            <label htmlFor="star5" className="star-label">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+                  pathLength="360"
+                ></path>
+              </svg>
+            </label>
             <input
               value="4"
               name="rate"
@@ -187,8 +206,14 @@ const Feedback = () => {
               type="radio"
               onChange={() => setInputRating("4")}
             />
-            <label title="text" htmlFor="star4"></label>
-
+            <label htmlFor="star4" className="star-label">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+                  pathLength="360"
+                ></path>
+              </svg>
+            </label>
             <input
               value="3"
               name="rate"
@@ -196,8 +221,14 @@ const Feedback = () => {
               type="radio"
               onChange={() => setInputRating("3")}
             />
-            <label title="text" htmlFor="star3"></label>
-
+            <label htmlFor="star3" className="star-label">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+                  pathLength="360"
+                ></path>
+              </svg>
+            </label>
             <input
               value="2"
               name="rate"
@@ -205,8 +236,14 @@ const Feedback = () => {
               type="radio"
               onChange={() => setInputRating("2")}
             />
-            <label title="text" htmlFor="star2"></label>
-
+            <label htmlFor="star2" className="star-label">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+                  pathLength="360"
+                ></path>
+              </svg>
+            </label>
             <input
               value="1"
               name="rate"
@@ -214,36 +251,58 @@ const Feedback = () => {
               type="radio"
               onChange={() => setInputRating("1")}
             />
-            <label title="text" htmlFor="star1"></label>
+            <label htmlFor="star1" className="star-label">
+              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+                  pathLength="360"
+                ></path>
+              </svg>
+            </label>
           </div>
-        </div>
 
-        <div className="input-group-prepend">
-          <label className="input-group-text" htmlFor="inputName">
-            Comentario:
-          </label>
-        </div>
-        <input
-          type="text"
-          id="inputName"
-          className="form-control"
-          value={inputComentario}
-          onChange={(e) => setinputComentario(e.target.value)}
-        />
+          <div className="input-group-prepend "></div>
+          <input
+            type="text"
+            id="inputComentario"
+            className="form-control mb-3"
+            value={inputComentario}
+            onChange={(e) => setinputComentario(e.target.value)}
+            required
+          />
+
+          <div className="input-group mb-3">
+            <button className="btn btn-primary" type="submit">
+              Crear Comentario
+            </button>
+          </div>
+        </form>
       </div>
 
-      <div className="input-group mb-4">
-        <button
-          className="btn btn-primary"
-          type="button"
-          onClick={createComentariosBD}
-        >
-          Crear Comentario
-        </button>
+      <div className="mb-4">
+        {showComentarios.length > 0 ? (
+          showComentarios.map((item, index) => (
+            <div key={index} className="feedbackBox">
+              <span className="notititle">{item.usuario}</span>
+              <br></br>
+              <span>{renderStars(item.rating)}</span>
+              <br></br>
+              <span className="notibody">Comentario: {item.comentario}</span>
+              <button
+                className="btn btn-danger m-4"
+                onClick={() => deleteComentariosBD(item._id)}
+              >
+                Borrar
+              </button>
+            </div>
+          ))
+        ) : (
+          <div className="no-data">
+            <h2>No hay datos disponibles</h2>
+          </div>
+        )}
       </div>
-
-      <div className="mb-4">{showComentarios}</div>
     </div>
   );
 };
-export default Feedback;
+export default FeedbackAdmin;
