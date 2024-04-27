@@ -2,6 +2,7 @@
   background-color: rgb(16, 15, 15);
   min-height: calc(100vh - 44px);
   padding: 1px;
+  color: white;
 }
 /* ---------------------------------------
 --  para mostrar los comentarios
@@ -60,8 +61,8 @@
 .rating-card {
   width: auto;
   height: auto;
-  min-width: 10rem;
-  min-height: 5rem;
+  min-width: 50vh;
+  min-height: 50vh;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -95,6 +96,7 @@
 
 .text-wrapper {
   width: 100%;
+  min-width: 60vh;
   height: fit-content;
   display: flex;
   flex-direction: column;

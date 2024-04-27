@@ -12,7 +12,7 @@ const CreateClass = () => {
   // -------------------------------------------------------------
   // Variables basura que hay q borrar solo son para probar
   // -------------------------------------------------------------
-  const [usuarioActivo, setUsuarioActivo] = useState(["Usuario No Dado"]);
+  const [usuarioActivo, setUsuarioActivo] = useState("Staff");
 
   // -------------------------------------------------------------
   // Seran input
@@ -119,118 +119,128 @@ const CreateClass = () => {
   };
 
   return (
-    <div className="createClassStyle">
-      <div className="form-container">
-        <h2 className="title">Crear Clase</h2>
-        <div className="social-message">
-          <div className="line"></div>
-          <div className="message">Tus citas programadas</div>
-          <div className="line"></div>
+    <>
+      {(usuarioActivo === "Staff" || usuarioActivo === "Admin") && (
+        <div className="createClassStyle">
+          <div className="form-container">
+            <h2 className="title">Crear Clase</h2>
+            <div className="social-message">
+              <div className="line"></div>
+              <div className="message">Tus citas programadas</div>
+              <div className="line"></div>
+            </div>
+            <form onSubmit={handleSubmit} className="form-CreateClass">
+              <div className="input-group-CreateClass">
+                <label htmlFor="inputActivity">Actividad:</label>
+                <select
+                  id="inputActivity"
+                  className="select-CreateClass"
+                  value={inputService}
+                  onChange={(e) => setinputService(e.target.value)}
+                  required
+                >
+                  <option value="">Seleccione una opcion</option>
+                  <option value="box">Box</option>
+                  <option value="plunche">Plunche</option>
+                  <option value="baile">Baile</option>
+                </select>
+              </div>
+
+              <div className="input-group-CreateClass">
+                <label htmlFor="inputDate">Fecha:</label>
+                <input
+                  type="date"
+                  id="inputDate"
+                  value={inputDate}
+                  onChange={(e) => setinputDate(e.target.value)}
+                  min={new Date().toISOString().split("T")[0]}
+                  className="input-group-CreateClass input"
+                  required
+                />
+              </div>
+
+              <div className="input-group-CreateClass">
+                <label htmlFor="inputHour">Hora:</label>
+                <input
+                  type="time"
+                  id="inputHour"
+                  value={inputHour}
+                  onChange={(e) => setinputHour(e.target.value)}
+                  className="input-group-CreateClass input"
+                  required
+                />
+              </div>
+
+              <div className="input-group-CreateClass">
+                <label htmlFor="inputCapacity">Cantidad de cupos:</label>
+                <input
+                  type="number"
+                  id="inputCapacity"
+                  value={inputCapacity}
+                  onChange={(e) => setInputCapacity(e.target.value)}
+                  min="1"
+                  max="500"
+                  required
+                />
+              </div>
+
+              <div className="input-group-CreateClass">
+                <label htmlFor="inputRepeatEvery">
+                  Repetir cada (minutos):
+                </label>
+                <input
+                  type="number"
+                  id="inputRepeatEvery"
+                  value={inputRepeatEveryMinutes}
+                  onChange={(e) => setinputRepeatEveryMinutes(e.target.value)}
+                  className="input-group-CreateClass input"
+                  min="1"
+                  max="999"
+                />
+              </div>
+
+              <div className="input-group-CreateClass">
+                <label htmlFor="inputRepeatFor">
+                  Repetir por (veces segun la cantidad de minutos anterior):
+                </label>
+                <input
+                  type="number"
+                  id="inputRepeatFor"
+                  value={inputRepeatNTimes}
+                  onChange={(e) => setinputRepeatNTimes(e.target.value)}
+                  className="input-group-CreateClass input"
+                  min="1"
+                  max="100"
+                />
+              </div>
+
+              <div className="input-group-CreateClass">
+                <label htmlFor="inputRepeatWeekly">
+                  Repetir cantidad todo lo anterior (semanas consecutivas):
+                </label>
+                <input
+                  type="number"
+                  id="inputRepeatWeekly"
+                  value={inputRepeatWeekly}
+                  onChange={(e) => setinputRepeatWeekly(e.target.value)}
+                  className="input-group-CreateClass input"
+                  min="1"
+                  max="52"
+                />
+              </div>
+
+              <button type="submit" className="buttomCreate">
+                Crear Clase
+              </button>
+            </form>
+          </div>
         </div>
-        <form onSubmit={handleSubmit} className="form-CreateClass">
-          <div className="input-group-CreateClass">
-            <label htmlFor="inputActivity">Actividad:</label>
-            <select
-              id="inputActivity"
-              className="select-CreateClass"
-              value={inputService}
-              onChange={(e) => setinputService(e.target.value)}
-              required
-            >
-              <option value="">Seleccione una opcion</option>
-              <option value="box">Box</option>
-              <option value="plunche">Plunche</option>
-              <option value="baile">Baile</option>
-            </select>
-          </div>
+      )}
 
-          <div className="input-group-CreateClass">
-            <label htmlFor="inputDate">Fecha:</label>
-            <input
-              type="date"
-              id="inputDate"
-              value={inputDate}
-              onChange={(e) => setinputDate(e.target.value)}
-              min={new Date().toISOString().split("T")[0]}
-              className="input-group-CreateClass input"
-              required
-            />
-          </div>
-
-          <div className="input-group-CreateClass">
-            <label htmlFor="inputHour">Hora:</label>
-            <input
-              type="time"
-              id="inputHour"
-              value={inputHour}
-              onChange={(e) => setinputHour(e.target.value)}
-              className="input-group-CreateClass input"
-              required
-            />
-          </div>
-
-          <div className="input-group-CreateClass">
-            <label htmlFor="inputCapacity">Cantidad de cupos:</label>
-            <input
-              type="number"
-              id="inputCapacity"
-              value={inputCapacity}
-              onChange={(e) => setInputCapacity(e.target.value)}
-              min="1"
-              max="500"
-              required
-            />
-          </div>
-
-          <div className="input-group-CreateClass">
-            <label htmlFor="inputRepeatEvery">Repetir cada (minutos):</label>
-            <input
-              type="number"
-              id="inputRepeatEvery"
-              value={inputRepeatEveryMinutes}
-              onChange={(e) => setinputRepeatEveryMinutes(e.target.value)}
-              className="input-group-CreateClass input"
-              min="1"
-              max="999"
-            />
-          </div>
-
-          <div className="input-group-CreateClass">
-            <label htmlFor="inputRepeatFor">
-              Repetir por (veces segun la cantidad de minutos anterior):
-            </label>
-            <input
-              type="number"
-              id="inputRepeatFor"
-              value={inputRepeatNTimes}
-              onChange={(e) => setinputRepeatNTimes(e.target.value)}
-              className="input-group-CreateClass input"
-              min="1"
-              max="100"
-            />
-          </div>
-
-          <div className="input-group-CreateClass">
-            <label htmlFor="inputRepeatWeekly">
-              Repetir cantidad todo lo anterior (semanas consecutivas):
-            </label>
-            <input
-              type="number"
-              id="inputRepeatWeekly"
-              value={inputRepeatWeekly}
-              onChange={(e) => setinputRepeatWeekly(e.target.value)}
-              className="input-group-CreateClass input"
-              min="1"
-              max="52"
-            />
-          </div>
-
-          <button type="submit" className="buttomCreate">
-            Crear Clase
-          </button>
-        </form>
-      </div>
-    </div>
+      {usuarioActivo !== "Admin" && usuarioActivo !== "Staff" && (
+        <h2>Debe logearse</h2>
+      )}
+    </>
   );
 };
 

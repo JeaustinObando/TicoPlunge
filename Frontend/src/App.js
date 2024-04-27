@@ -1,7 +1,7 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Layout from "./Components/Layout";
-import FeedbackAdmin from "./Views/Feedback/FeedbackAdmin";
+import Feedback from "./Views/Feedback/Feedback";
 import Home from "./Views/Home/Home";
 import CreateClass from "./Views/CreateClass/CreateClass";
 import Appointment from "./Views/Appointment/Appointment";
@@ -23,7 +23,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Layout />}>
             <Route index element={<Home />} />
-            <Route path="/Feedback" element={<FeedbackAdmin />} />
+            <Route path="/Feedback" element={<Feedback />} />
             <Route path="/CreateClass" element={<CreateClass />} />
             <Route path="/AppointmentForm" element={<Appointment />} />
             <Route path="*" element={<NotFound />} />
