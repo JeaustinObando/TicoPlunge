@@ -110,8 +110,8 @@ const FeedbackAdmin = () => {
 
   return (
     <div className="FeedbackStyle">
-      <div className="container">
-        <div className="rating-card m-4">
+      <div className="container mt-4 ">
+        <div className="rating-card">
           <form onSubmit={handleSubmit}>
             <div className="text-wrapper">
               <p className="text-primary">Deja tu comentario</p>
@@ -197,10 +197,10 @@ const FeedbackAdmin = () => {
             </div>
 
             <div className="input-group-prepend "></div>
-            <input
+            <textarea
               type="text"
               id="inputComentario"
-              className="form-control m-3"
+              className="form-control mt-3"
               value={inputComentario}
               onChange={(e) => setinputComentario(e.target.value)}
               required
@@ -225,7 +225,7 @@ const FeedbackAdmin = () => {
               <div class="error__title">{showErroresForm}</div>
             </div>
 
-            <div className="input-group m-3">
+            <div className="input-group mt-3">
               <button className="btn btn-primary" type="submit">
                 Crear Comentario
               </button>
@@ -233,7 +233,7 @@ const FeedbackAdmin = () => {
           </form>
         </div>
 
-        <div className="m-4">
+        <div>
           {showComentarios.length > 0 ? (
             showComentarios.map((item, index) => (
               <div key={index} className="feedbackBox m-4">
