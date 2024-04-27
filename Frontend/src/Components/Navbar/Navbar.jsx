@@ -36,7 +36,6 @@ function Navbar() {
         <Link to="/AppointmentForm" className="link-navbar">
           Reservar
         </Link>
-
       </div>
     </div>
   );

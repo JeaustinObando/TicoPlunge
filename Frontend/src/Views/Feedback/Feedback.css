@@ -1,3 +1,8 @@
+.FeedbackStyle {
+  background-color: rgb(16, 15, 15);
+  min-height: calc(100vh - 44px);
+  padding: 1px;
+}
 /* ---------------------------------------
 --  para mostrar los comentarios
 ------------------------------------------ */
@@ -18,7 +23,6 @@
   font-size: 16px;
   --gradient: linear-gradient(to bottom, #ffa723, #3d83ff, #7e61ff);
   --color: #32a6ff;
-  margin: 1rem; /* Margen para separar las cajas de comentarios */
 }
 
 .feedbackBox:after {
@@ -56,7 +60,7 @@
 .rating-card {
   width: auto;
   height: auto;
-  min-width: 15rem;
+  min-width: 10rem;
   min-height: 5rem;
   display: flex;
   flex-direction: column;

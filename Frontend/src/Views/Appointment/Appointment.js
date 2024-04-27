@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import "./Appointment.css";
-import { urlAppointment } from "../../GlobalVariables";
+import {
+  createToBD,
+  deleteByIDToBD,
+  selectToBD,
+  urlAppointment,
+} from "../../GlobalVariables";
 
 const Appointment = () => {
   // -------------------------------------------------------------
@@ -27,54 +31,40 @@ const Appointment = () => {
   // seleciona las variables y les agrega un boton de borrar a la par
   // -------------------------------------------------------------
   const selectClassBD = async () => {
-    const serviceUrl = urlAppointment;
-    let config = {
-      headers: {
-        "Content-Type": "application/json",
-      },
-    };
-
-    try {
-      let response = await axios.get(serviceUrl, config);
-
-      if (response.data.length > 0) {
-        setshowClasses(response.data); // Guardar los datos en el estado directamente
-      } else {
-        setshowClasses(<i>No hay clases</i>);
-      }
-    } catch (error) {
-      console.error("Error fetching data:", error);
-    }
+    const response = await selectToBD(urlAppointment);
+    setshowClasses(response);
   };
 
   return (
-    <div className="container mt-5 ">
-      <div className="card-container">
-        {showClasses.length > 0 ? (
-          showClasses.map((item, index) => (
-            <div key={index} className="card">
-              <span>Profesor: {item.usuario}</span>
-              <br />
-              <span>Hora: {item.hour}</span>
-              <br />
-              <span>Fecha: {item.date}</span>
-              <br />
-              <span>Cupos disponibles: {item.capacity}</span>
-              <br />
-              <span>Actividad: {item.activity}</span>
-              <button
-                className="btn btn-primary m-4"
-                onClick={() => reserve(item._id)}
-              >
-                AGENDAR
-              </button>
+    <div className="AppointmentStyle">
+      <div className="container mt-5 ">
+        <div className="card-container">
+          {showClasses.length > 0 ? (
+            showClasses.map((item, index) => (
+              <div key={index} className="card">
+                <span>Profesor: {item.usuario}</span>
+                <br />
+                <span>Hora: {item.hour}</span>
+                <br />
+                <span>Fecha: {item.date}</span>
+                <br />
+                <span>Cupos disponibles: {item.capacity}</span>
+                <br />
+                <span>Actividad: {item.activity}</span>
+                <button
+                  className="btn btn-primary m-4"
+                  onClick={() => reserve(item._id)}
+                >
+                  AGENDAR
+                </button>
+              </div>
+            ))
+          ) : (
+            <div className="no-data">
+              <h2>No hay datos disponibles</h2>
             </div>
-          ))
-        ) : (
-          <div className="no-data">
-            <h2>No hay datos disponibles</h2>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );

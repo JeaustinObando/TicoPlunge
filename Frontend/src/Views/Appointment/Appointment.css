@@ -1,3 +1,11 @@
+.AppointmentStyle{
+  min-height: calc(100vh - 44px);
+  padding: 1px;
+}
+
+/* ---------------------------------------
+--  Estilo de como mostrar las citas
+------------------------------------------ */
 .card-container {
   display: flex;
   flex-wrap: wrap;
