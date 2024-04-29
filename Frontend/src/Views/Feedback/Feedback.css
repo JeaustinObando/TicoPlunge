@@ -79,7 +79,7 @@
 .rating-card textarea {
   background-color: transparent;
   color: white;
-  width: 100%;
+  min-width: 80vh;
   height: 80px;
   padding: 12px 20px;
   box-sizing: border-box;
@@ -87,11 +87,11 @@
 }
 
 .rating-card button {
-  background-color: transparent; /* Hace el fondo transparente */
-  display: block; /* Cambia el elemento a un bloque */
-  margin: 0 auto; /* Centra horizontalmente */
-  text-align: center; /* Alinea el texto al centro */
-  width: fit-content; /* Ajusta el ancho al contenido */
+  background-color: transparent;
+  display: block; 
+  margin: 0 auto; 
+  text-align: center;
+  width: fit-content; 
 }
 
 .text-wrapper {
