@@ -18,19 +18,56 @@ MongoClient.connect(mongoURI)
     const db = client.db(); // Obtén una referencia a la base de datos
 
     // Ruta para manejar las solicitudes GET a /comentarios
+    // app.get("/comentarios", (req, res) => {
+    //   db.collection("comentarios")
+    //     .find()
+    //     .toArray()
+    //     .then((data) => {
+    //       res.json(data); // Devuelve los datos como JSON
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error al consultar datos en MongoDB:", error);
+    //       res
+    //         .status(500)
+    //         .json({ error: "Error al consultar datos en MongoDB" });
+    //     });
+    // });
+
+    // Ruta para manejar las solicitudes GET a /comentarios
     app.get("/comentarios", (req, res) => {
-      db.collection("comentarios")
-        .find()
-        .toArray()
-        .then((data) => {
-          res.json(data); // Devuelve los datos como JSON
-        })
-        .catch((error) => {
-          console.error("Error al consultar datos en MongoDB:", error);
-          res
-            .status(500)
-            .json({ error: "Error al consultar datos en MongoDB" });
-        });
+      const filtro = req.query.filtro; // Obtenemos el filtro de la consulta
+      // console.log(filtro);
+      // Si hay un filtro en la consulta, lo utilizamos en la consulta a la base de datos
+      if (filtro) {
+        const filtroObj = JSON.parse(filtro);
+
+        db.collection("comentarios")
+          .find(filtroObj)
+          .toArray()
+          .then((data) => {
+            res.json(data); // Devuelve los datos como JSON
+          })
+          .catch((error) => {
+            console.error("Error al consultar datos en MongoDB:", error);
+            res
+              .status(500)
+              .json({ error: "Error al consultar datos en MongoDB" });
+          });
+      } else {
+        // Si no hay filtro en la consulta, simplemente obtenemos todos los comentarios
+        db.collection("comentarios")
+          .find()
+          .toArray()
+          .then((data) => {
+            res.json(data); // Devuelve los datos como JSON
+          })
+          .catch((error) => {
+            console.error("Error al consultar datos en MongoDB:", error);
+            res
+              .status(500)
+              .json({ error: "Error al consultar datos en MongoDB" });
+          });
+      }
     });
 
     // Ruta para manejar las solicitudes POST a /comentarios

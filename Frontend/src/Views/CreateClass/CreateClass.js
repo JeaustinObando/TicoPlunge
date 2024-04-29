@@ -5,6 +5,7 @@ import {
   createToBD,
   deleteByIDToBD,
   selectToBD,
+  selectFilterToBD,
   urlClass,
 } from "../../GlobalVariables";
 
@@ -20,9 +21,9 @@ const CreateClass = () => {
   const [inputService, setinputService] = useState("");
   const [inputDate, setinputDate] = useState("");
   const [inputHour, setinputHour] = useState("");
-  const [inputRepeatEveryMinutes, setinputRepeatEveryMinutes] = useState("");
-  const [inputRepeatNTimes, setinputRepeatNTimes] = useState("");
-  const [inputRepeatWeekly, setinputRepeatWeekly] = useState("");
+  const [inputRepeatEveryMinutes, setinputRepeatEveryMinutes] = useState(1);
+  const [inputRepeatNTimes, setinputRepeatNTimes] = useState(1);
+  const [inputRepeatWeekly, setinputRepeatWeekly] = useState(1);
   const [inputCapacity, setInputCapacity] = useState("");
 
   // -------------------------------------------------------------
@@ -86,16 +87,34 @@ const CreateClass = () => {
     let allCreated = true;
 
     for (const appointment of newAppointments) {
-      const success = await createClassBD(
-        appointment.date,
-        appointment.hour,
-        usuarioActivo,
-        inputService,
-        inputCapacity // Pasar la capacidad al método
-      );
+      const exist = {
+        $and: [
+          { date: appointment.date },
+          { hour: appointment.hour },
+          { usuario: usuarioActivo },
+          { service: inputService },
+        ],
+      };
+      const response = await selectFilterToBD(urlClass, exist); // Espera la respuesta antes de continuar
+      if (response.length === 0) {
+        // Verifica si no hay ningún registro existente
+        const success = await createClassBD(
+          appointment.date,
+          appointment.hour,
+          usuarioActivo,
+          inputService,
+          inputCapacity
+        );
 
-      if (!success) {
+        if (!success) {
+          allCreated = false;
+          break;
+        }
+      } else {
         allCreated = false;
+        alert(
+          `La clase para ${appointment.date} a las ${appointment.hour} ya existe.`
+        );
         break;
       }
     }
@@ -103,7 +122,7 @@ const CreateClass = () => {
     if (allCreated) {
       alert("Todos creados con éxito");
     } else {
-      alert("Algunos no se pudieron crear");
+      alert("Algunos no se pudieron crear o ya existian");
     }
   };
 
@@ -145,7 +164,6 @@ const CreateClass = () => {
                   <option value="baile">Baile</option>
                 </select>
               </div>
-
               <div className="input-group-CreateClass">
                 <label htmlFor="inputDate">Fecha:</label>
                 <input
@@ -158,7 +176,6 @@ const CreateClass = () => {
                   required
                 />
               </div>
-
               <div className="input-group-CreateClass">
                 <label htmlFor="inputHour">Hora:</label>
                 <input
@@ -170,7 +187,6 @@ const CreateClass = () => {
                   required
                 />
               </div>
-
               <div className="input-group-CreateClass">
                 <label htmlFor="inputCapacity">Cantidad de cupos:</label>
                 <input
@@ -186,6 +202,9 @@ const CreateClass = () => {
 
               <div className="input-group-CreateClass">
                 <label htmlFor="inputRepeatEvery">
+                  <hr />
+                  Opciones de abajo para más de 1 clase
+                  <hr />
                   Repetir cada (minutos):
                 </label>
                 <input
@@ -198,7 +217,6 @@ const CreateClass = () => {
                   max="999"
                 />
               </div>
-
               <div className="input-group-CreateClass">
                 <label htmlFor="inputRepeatFor">
                   Repetir por (veces segun la cantidad de minutos anterior):
@@ -213,7 +231,6 @@ const CreateClass = () => {
                   max="100"
                 />
               </div>
-
               <div className="input-group-CreateClass">
                 <label htmlFor="inputRepeatWeekly">
                   Repetir cantidad todo lo anterior (semanas consecutivas):
@@ -228,7 +245,6 @@ const CreateClass = () => {
                   max="52"
                 />
               </div>
-
               <button type="submit" className="buttomCreate">
                 Crear Clase
               </button>

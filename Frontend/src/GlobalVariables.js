@@ -29,6 +29,25 @@ export const selectToBD = async (serviceUrl) => {
 };
 
 /**
+ * Realiza una solicitud GET a un servicio web con un filtro y devuelve los datos obtenidos.
+ * @param {string} serviceUrl - La URL del servicio web al que se va a realizar la solicitud.
+ * @param {object} searchBy - El filtro a aplicar en la consulta, en formato de objeto JSON.
+ * @returns {Promise<Array>} - Una promesa que resuelve en un array de datos obtenidos.
+ */
+export const selectFilterToBD = async (serviceUrl, searchBy) => {
+  try {
+    // Realizar la solicitud GET con el filtro como parámetro de consulta
+    const response = await selectToBD(
+      `${serviceUrl}?filtro=${JSON.stringify(searchBy)}`
+    );
+    return response; // Retornar los datos obtenidos
+  } catch (error) {
+    console.error("Error al obtener datos:", error);
+    return []; // Devolver un array vacío en caso de error
+  }
+};
+
+/**
  * Creates a new document in the MongoDB database via a POST request to the specified service URL.
  * @param {string} serviceUrl - The URL of the service where the document will be created.
  * @param {Object} infoToSave - The data to be saved as the new document.
@@ -101,3 +120,37 @@ export const deleteByIDToBD = async (url, id) => {
     alert("Acción cancelada.");
   }
 };
+
+export function NotFound({ mensaje }) {
+  return (
+    <div className="NotFound">
+      <div>
+        <h1>{mensaje}</h1>
+      </div>
+      <div className="conteiner-hamster">
+        <div
+          aria-label="Orange and tan hamster running in a metal wheel"
+          role="img"
+          class="wheel-and-hamster"
+        >
+          <div class="wheel"></div>
+          <div class="hamster">
+            <div class="hamster__body">
+              <div class="hamster__head">
+                <div class="hamster__ear"></div>
+                <div class="hamster__eye"></div>
+                <div class="hamster__nose"></div>
+              </div>
+              <div class="hamster__limb hamster__limb--fr"></div>
+              <div class="hamster__limb hamster__limb--fl"></div>
+              <div class="hamster__limb hamster__limb--br"></div>
+              <div class="hamster__limb hamster__limb--bl"></div>
+              <div class="hamster__tail"></div>
+            </div>
+          </div>
+          <div class="spoke"></div>
+        </div>
+      </div>
+    </div>
+  );
+}

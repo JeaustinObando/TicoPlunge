@@ -1,4 +1,4 @@
-.AppointmentStyle{
+.AppointmentStyle {
   min-height: calc(100vh - 44px);
   padding: 1px;
 }
@@ -46,3 +46,7 @@
   text-align: center;
   width: 100%;
 }
+
+/* ---------------------------------------
+--  Estilo para form de buscar
+------------------------------------------ */

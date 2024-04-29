@@ -5,18 +5,9 @@ import Feedback from "./Views/Feedback/Feedback";
 import Home from "./Views/Home/Home";
 import CreateClass from "./Views/CreateClass/CreateClass";
 import Appointment from "./Views/Appointment/Appointment";
+import { NotFound } from "./GlobalVariables";
 
 function App() {
-  function NotFound() {
-    return (
-      <div className="NotFound">
-        <div>
-          <h1>La página que busca no existe</h1>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <div>
       <BrowserRouter>
@@ -26,7 +17,7 @@ function App() {
             <Route path="/Feedback" element={<Feedback />} />
             <Route path="/CreateClass" element={<CreateClass />} />
             <Route path="/AppointmentForm" element={<Appointment />} />
-            <Route path="*" element={<NotFound />} />
+            <Route path="*" element={<NotFound mensaje="Página no encontrada" />} />
           </Route>
         </Routes>
       </BrowserRouter>
