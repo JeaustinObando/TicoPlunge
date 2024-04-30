@@ -100,7 +100,7 @@ const CreateClass = () => {
           { service: inputService },
         ],
       };
-      const response = await selectFilterToBD(urlClass, exist); // Espera la respuesta antes de continuar
+      const response = await selectFilterToBD(urlClass, exist);
       if (response.length === 0) {
         // Verifica si no hay ningún registro existente
         const success = await createClassBD(

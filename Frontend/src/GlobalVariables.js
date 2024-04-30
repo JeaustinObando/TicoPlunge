@@ -1,10 +1,17 @@
 import axios from "axios";
+// -------------------------------------------------------------
+// urls del backend
+// -------------------------------------------------------------
 
 export const baseUrl = "http://localhost:8080";
 
 export const urlFeedback = `${baseUrl}/comentarios`;
 export const urlAppointment = `${baseUrl}/comentarios`;
 export const urlClass = `${baseUrl}/comentarios`;
+
+// -------------------------------------------------------------
+// funciones globlaes
+// -------------------------------------------------------------
 
 /**
  * Realiza una solicitud GET a un servicio web y devuelve los datos obtenidos.

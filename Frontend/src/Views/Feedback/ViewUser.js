@@ -132,6 +132,7 @@ const ViewUser = ({
           </div>
         </form>
       </div>
+
       <div className="container mt-4 ">
         <div>
           {showComentarios.length > 0 ? (

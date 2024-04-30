@@ -15,7 +15,7 @@ const Feedback = () => {
   // -------------------------------------------------------------
   // Variables basura que hay q borrar solo son para probar
   // -------------------------------------------------------------
-  const [usuarioActivo, setUsuarioActivo] = useState("nada");
+  const [usuarioActivo, setUsuarioActivo] = useState("as");
 
   // -------------------------------------------------------------
   // Estas se mostraran en el HTML

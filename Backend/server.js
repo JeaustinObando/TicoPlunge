@@ -10,6 +10,8 @@ app.use(express.json()); // Configura body-parser para analizar JSON
 
 // URL de conexión a tu base de datos MongoDB
 const mongoURI = "mongodb://127.0.0.1:27017/proyectReact";
+// const mongoURI =
+//   "mongodb+srv://isaacm:isaacm@clusterticoplunge.sgaaiup.mongodb.net/";
 
 // Conexión a la base de datos MongoDB
 MongoClient.connect(mongoURI)

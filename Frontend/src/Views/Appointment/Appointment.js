@@ -20,11 +20,13 @@ const Appointment = () => {
   // Seran input
   // -------------------------------------------------------------
   const [inputSearch, setinputSearch] = useState("");
+  const [inputSearchDate, setinputSearchDate] = useState("");
 
   // -------------------------------------------------------------
   // Estas se mostraran en el HTML
   // -------------------------------------------------------------
   const [showClasses, setshowClasses] = useState("");
+  const [showErrorSearch, setshowErrorSearch] = useState("");
 
   // -------------------------------------------------------------
   // Cada vez que carga la pantalla
@@ -46,21 +48,36 @@ const Appointment = () => {
   };
 
   const searchByAnyBD = async () => {
-    const filtro = {
-      $or: [
-        { date: { $regex: inputSearch, $options: "i" } },
-        { usuario: { $regex: inputSearch, $options: "i" } },
-        { hour: { $regex: inputSearch, $options: "i" } },
-        { service: { $regex: inputSearch, $options: "i" } },
-        { capacity: { $regex: inputSearch, $options: "i" } },
+    // filtro al buscar
+    let filtro = {
+      $and: [
+        {
+          $or: [
+            { usuario: { $regex: inputSearch, $options: "i" } },
+            { hour: { $regex: inputSearch, $options: "i" } },
+            { service: { $regex: inputSearch, $options: "i" } },
+            { capacity: { $regex: inputSearch, $options: "i" } },
+          ],
+        },
       ],
     };
+
+    // Verificar si se ha seleccionado una fecha
+    if (inputSearchDate) {
+      filtro.$and.push({ date: { $regex: inputSearchDate, $options: "i" } });
+    }
     const response = await selectFilterToBD(urlAppointment, filtro);
     setshowClasses(response);
   };
 
   const handleSubmitSearch = async (event) => {
     event.preventDefault(); // Evitar que el formulario se envíe vacio
+    if (!inputSearch && !inputSearchDate) {
+      setshowErrorSearch("Bebe llenar al menos un campo para poder buscar");
+      return;
+    }
+    setshowErrorSearch("");
+
     await searchByAnyBD();
   };
 
@@ -73,10 +90,13 @@ const Appointment = () => {
       {usuarioActivo === "User" && (
         <ViewUser
           showClasses={showClasses}
+          setinputSearchDate={setinputSearchDate}
           reserve={reserve}
           inputSearch={inputSearch}
           setinputSearch={setinputSearch}
           handleSubmitSearch={handleSubmitSearch}
+          showErrorSearch={showErrorSearch}
+          inputSearchDate={inputSearchDate}
         />
       )}
 
