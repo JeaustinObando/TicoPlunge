@@ -48,13 +48,12 @@ const Appointment = () => {
   const selectClassBD = async () => {
     const fechaActual = new Date();
     let filtro = {
-      date: { $gt: fechaActual } // Filtra las clases con fecha mayor a la fecha actual
+      date: { $gt: fechaActual }, // Filtra las clases con fecha mayor a la fecha actual
     };
-  
+
     const response = await selectFilterToBD(urlAppointment, filtro);
     setshowClasses(response);
   };
-  
 
   const searchByAnyBD = async () => {
     const fechaActual = new Date();
@@ -75,7 +74,9 @@ const Appointment = () => {
 
     // Verificar si se ha seleccionado una fecha
     if (inputData.searchDate) {
-      filtro.$and.push({ date: { $regex: inputData.searchDate, $options: "i" } });
+      filtro.$and.push({
+        date: { $regex: inputData.searchDate, $options: "i" },
+      });
     }
     const response = await selectFilterToBD(urlAppointment, filtro);
     setshowClasses(response);

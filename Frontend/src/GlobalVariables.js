@@ -76,9 +76,9 @@ export const createToBD = async (serviceUrl, infoToSave) => {
     return message;
   } catch (error) {
     // Log any errors that occur during the creation process
-    // console.error("Error al insertar documento en MongoDB:", error);
-    const message = <ErrorAlert message={error} />;
-
+    console.error("Error al insertar documento en MongoDB:", error);
+    const errorMessage = error.message || "Error desconocido";
+    const message = <ErrorAlert message={errorMessage} />;
     // Show error message
     return message;
   }

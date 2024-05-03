@@ -13,6 +13,8 @@ import {
   ErrorAlert,
 } from "../../GlobalVariables";
 
+let timeWaitAlert = 8000;
+
 const Feedback = () => {
   // -------------------------------------------------------------
   // Variables basura que hay q borrar solo son para probar
@@ -55,10 +57,11 @@ const Feedback = () => {
 
     await selectComentariosBD();
 
+    // Deja un mensaje de exito o error al crear
     setshowErroresForm(response);
     setTimeout(() => {
       setshowErroresForm("");
-    }, 5000);
+    }, timeWaitAlert);
   };
 
   // -------------------------------------------------------------

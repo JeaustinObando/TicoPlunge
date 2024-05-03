@@ -20,7 +20,9 @@ const ViewUserAppointment = ({
                 id="searchInput"
                 placeholder="Ingrese su búsqueda"
                 value={inputData.search}
-                onChange={(e) => setInputData({...inputData, search: e.target.value})}
+                onChange={(e) =>
+                  setInputData({ ...inputData, search: e.target.value })
+                }
               />
             </div>
             <div className=" mb-2">
@@ -29,7 +31,9 @@ const ViewUserAppointment = ({
                 id="inputDate"
                 className="input-date"
                 value={inputData.searchDate}
-                onChange={(e) => setInputData({...inputData, searchDate: e.target.value})}
+                onChange={(e) =>
+                  setInputData({ ...inputData, searchDate: e.target.value })
+                }
                 min={new Date().toISOString().split("T")[0]}
               />
             </div>

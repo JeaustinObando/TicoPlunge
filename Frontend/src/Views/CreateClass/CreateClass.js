@@ -13,6 +13,8 @@ import {
   ErrorAlert,
 } from "../../GlobalVariables";
 
+let timeWaitAlert = 8000;
+
 const CreateClass = () => {
   // -------------------------------------------------------------
   // Variables basura que hay q borrar solo son para probar
@@ -54,6 +56,14 @@ const CreateClass = () => {
       capacity: capacity,
     };
 
+    const confirmationMessage = `¿Estás seguro de que deseas crear la clase para ${date} a las ${hour}?`;
+    const confirmed = window.confirm(confirmationMessage);
+
+    if (!confirmed) {
+      // Si el usuario cancela, no hacemos nada y retornamos false
+      return false;
+    }
+
     try {
       const config = {
         headers: {
@@ -76,18 +86,25 @@ const CreateClass = () => {
     const initialDate = new Date(`${inputData.date}T${inputData.hour}:00`);
     const newAppointments = [];
 
+    // Crear citas cada 'repeatEveryMinutes' minutos, repetido 'repeatNTimes'
     for (let i = 0; i < inputData.repeatNTimes; i++) {
+      // Calcula la nueva fecha con el incremento de minutos
       const newDate = new Date(
         initialDate.getTime() + i * inputData.repeatEveryMinutes * 60000
       );
 
+      // Repetir la cita semanalmente según 'repeatWeekly'
       for (let j = 0; j < inputData.repeatWeekly; j++) {
+        // Calcula el tiempo para la semana siguiente
         const finalDate = new Date(
-          newDate.getTime() + j * 7 * 24 * 60 * 60 * 1000 // Ajustar aquí para cambiar las fechas cada semana
+          newDate.getTime() + j * 7 * 24 * 60 * 60 * 1000
         );
 
         const formattedDate = finalDate.toISOString().split("T")[0];
-        const formattedHour = finalDate.toTimeString().split(" ")[0];
+        const formattedHour = finalDate
+          .toTimeString()
+          .split(" ")[0]
+          .substring(0, 8); // Extrae correctamente la hora
 
         newAppointments.push({
           date: formattedDate,
@@ -95,8 +112,9 @@ const CreateClass = () => {
         });
       }
     }
-    let allCreated = true;
 
+    // Verificar y crear cada cita en la base de datos
+    let allCreated = true;
     for (const appointment of newAppointments) {
       const exist = {
         $and: [
@@ -108,7 +126,6 @@ const CreateClass = () => {
       };
       const response = await selectFilterToBD(urlClass, exist);
       if (response.length === 0) {
-        // Verifica si no hay ningún registro existente
         const success = await createClassBD(
           appointment.date,
           appointment.hour,
@@ -116,33 +133,35 @@ const CreateClass = () => {
           inputData.service,
           inputData.capacity
         );
-
         if (!success) {
           allCreated = false;
+          setshowErroresForm(
+            <ErrorAlert message="Error al crear algunas citas." />
+          );
           break;
         }
       } else {
         allCreated = false;
-        const message = `La clase para ${appointment.date} a las ${appointment.hour} ya existe.`;
-
-        setshowErroresForm(<ErrorAlert message={message} />);
+        setshowErroresForm(
+          <ErrorAlert
+            message={`La clase para ${appointment.date} a las ${appointment.hour} ya existe.`}
+          />
+        );
         break;
       }
     }
 
+    // Manejo de la confirmación o error en la creación de las citas
     if (allCreated) {
       setshowErroresForm(<SuccessAlert message="Todos creados con éxito" />);
-      setTimeout(() => {
-        setshowErroresForm("");
-      }, 5000);
     } else {
       setshowErroresForm(
         <ErrorAlert message="Algunos no se pudieron crear o ya existían" />
       );
-      setTimeout(() => {
-        setshowErroresForm("");
-      }, 5000);
     }
+    setTimeout(() => {
+      setshowErroresForm("");
+    }, timeWaitAlert);
   };
 
   const handleSubmit = (e) => {
