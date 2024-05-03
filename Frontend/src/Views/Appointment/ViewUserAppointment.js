@@ -4,11 +4,9 @@ const ViewUserAppointment = ({
   showClasses,
   reserve,
   handleSubmitSearch,
-  setinputSearch,
-  inputSearchDate,
-  inputSearch,
+  inputData,
+  setInputData,
   showErrorSearch,
-  setinputSearchDate,
 }) => {
   return (
     <div className="AppointmentStyle">
@@ -21,8 +19,8 @@ const ViewUserAppointment = ({
                 className="form-control"
                 id="searchInput"
                 placeholder="Ingrese su búsqueda"
-                value={inputSearch}
-                onChange={(e) => setinputSearch(e.target.value)}
+                value={inputData.search}
+                onChange={(e) => setInputData({...inputData, search: e.target.value})}
               />
             </div>
             <div className=" mb-2">
@@ -30,8 +28,8 @@ const ViewUserAppointment = ({
                 type="date"
                 id="inputDate"
                 className="input-date"
-                value={inputSearchDate}
-                onChange={(e) => setinputSearchDate(e.target.value)}
+                value={inputData.searchDate}
+                onChange={(e) => setInputData({...inputData, searchDate: e.target.value})}
                 min={new Date().toISOString().split("T")[0]}
               />
             </div>

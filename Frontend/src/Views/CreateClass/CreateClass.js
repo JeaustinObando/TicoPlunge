@@ -25,13 +25,15 @@ const CreateClass = () => {
   // -------------------------------------------------------------
   // Seran input
   // -------------------------------------------------------------
-  const [inputService, setinputService] = useState("");
-  const [inputDate, setinputDate] = useState("");
-  const [inputHour, setinputHour] = useState("");
-  const [inputRepeatEveryMinutes, setinputRepeatEveryMinutes] = useState(1);
-  const [inputRepeatNTimes, setinputRepeatNTimes] = useState(1);
-  const [inputRepeatWeekly, setinputRepeatWeekly] = useState(1);
-  const [inputCapacity, setInputCapacity] = useState("");
+  const [inputData, setInputData] = useState({
+    service: "",
+    date: "",
+    hour: "",
+    repeatEveryMinutes: 1,
+    repeatNTimes: 1,
+    repeatWeekly: 1,
+    capacity: "",
+  });
 
   // -------------------------------------------------------------
   // Cada vez que carga la pantalla
@@ -69,15 +71,15 @@ const CreateClass = () => {
   // Crea n cantidad de Appointments segun el form
   // -------------------------------------------------------------
   const createAppointments = async () => {
-    const initialDate = new Date(`${inputDate}T${inputHour}:00`);
+    const initialDate = new Date(`${inputData.date}T${inputData.hour}:00`);
     const newAppointments = [];
 
-    for (let i = 0; i < inputRepeatNTimes; i++) {
+    for (let i = 0; i < inputData.repeatNTimes; i++) {
       const newDate = new Date(
-        initialDate.getTime() + i * inputRepeatEveryMinutes * 60000
+        initialDate.getTime() + i * inputData.repeatEveryMinutes * 60000
       );
 
-      for (let j = 0; j < inputRepeatWeekly; j++) {
+      for (let j = 0; j < inputData.repeatWeekly; j++) {
         const finalDate = new Date(
           newDate.getTime() + j * 7 * 24 * 60 * 60 * 1000 // Ajustar aquí para cambiar las fechas cada semana
         );
@@ -99,7 +101,7 @@ const CreateClass = () => {
           { date: appointment.date },
           { hour: appointment.hour },
           { usuario: usuarioActivo },
-          { service: inputService },
+          { service: inputData.service },
         ],
       };
       const response = await selectFilterToBD(urlClass, exist);
@@ -109,8 +111,8 @@ const CreateClass = () => {
           appointment.date,
           appointment.hour,
           usuarioActivo,
-          inputService,
-          inputCapacity
+          inputData.service,
+          inputData.capacity
         );
 
         if (!success) {
@@ -129,14 +131,19 @@ const CreateClass = () => {
     if (allCreated) {
       alert("Todos creados con éxito");
     } else {
-      alert("Algunos no se pudieron crear o ya existian");
+      alert("Algunos no se pudieron crear o ya existían");
     }
   };
 
   const handleSubmit = (e) => {
     e.preventDefault();
 
-    if (!inputCapacity || !inputDate || !inputHour || !inputService) {
+    if (
+      !inputData.capacity ||
+      !inputData.date ||
+      !inputData.hour ||
+      !inputData.service
+    ) {
       setshowErroresForm("Debe llenar al menos los que tienen un simbolo (*)");
       return;
     }
@@ -154,22 +161,10 @@ const CreateClass = () => {
     <>
       {(usuarioActivo === "Staff" || usuarioActivo === "Admin") && (
         <ViewStafCreateClass
-          inputService={inputService}
-          inputDate={inputDate}
-          inputHour={inputHour}
-          inputCapacity={inputCapacity}
-          inputRepeatEveryMinutes={inputRepeatEveryMinutes}
-          inputRepeatNTimes={inputRepeatNTimes}
-          inputRepeatWeekly={inputRepeatWeekly}
+          inputData={inputData}
           showErroresForm={showErroresForm}
           handleSubmit={handleSubmit}
-          setinputService={setinputService}
-          setinputDate={setinputDate}
-          setinputHour={setinputHour}
-          setInputCapacity={setInputCapacity}
-          setinputRepeatEveryMinutes={setinputRepeatEveryMinutes}
-          setinputRepeatNTimes={setinputRepeatNTimes}
-          setinputRepeatWeekly={setinputRepeatWeekly}
+          setInputData={setInputData}
         />
       )}
 

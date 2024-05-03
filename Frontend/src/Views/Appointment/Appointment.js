@@ -20,8 +20,10 @@ const Appointment = () => {
   // -------------------------------------------------------------
   // Seran input
   // -------------------------------------------------------------
-  const [inputSearch, setinputSearch] = useState("");
-  const [inputSearchDate, setinputSearchDate] = useState("");
+  const [inputData, setInputData] = useState({
+    search: "",
+    searchDate: "",
+  });
 
   // -------------------------------------------------------------
   // Estas se mostraran en el HTML
@@ -55,23 +57,25 @@ const Appointment = () => {
   
 
   const searchByAnyBD = async () => {
+    const fechaActual = new Date();
     // filtro al buscar
     let filtro = {
       $and: [
         {
           $or: [
-            { usuario: { $regex: inputSearch, $options: "i" } },
-            { hour: { $regex: inputSearch, $options: "i" } },
-            { service: { $regex: inputSearch, $options: "i" } },
-            { capacity: { $regex: inputSearch, $options: "i" } },
+            { usuario: { $regex: inputData.search, $options: "i" } },
+            { hour: { $regex: inputData.search, $options: "i" } },
+            { service: { $regex: inputData.search, $options: "i" } },
+            { capacity: { $regex: inputData.search, $options: "i" } },
           ],
         },
+        { date: { $gt: fechaActual } }, // Filtra las clases con fecha mayor a la fecha actual
       ],
     };
 
     // Verificar si se ha seleccionado una fecha
-    if (inputSearchDate) {
-      filtro.$and.push({ date: { $regex: inputSearchDate, $options: "i" } });
+    if (inputData.searchDate) {
+      filtro.$and.push({ date: { $regex: inputData.searchDate, $options: "i" } });
     }
     const response = await selectFilterToBD(urlAppointment, filtro);
     setshowClasses(response);
@@ -79,7 +83,7 @@ const Appointment = () => {
 
   const handleSubmitSearch = async (event) => {
     event.preventDefault(); // Evitar que el formulario se envíe vacio
-    if (!inputSearch && !inputSearchDate) {
+    if (!inputData.search && !inputData.searchDate) {
       setshowErrorSearch("Bebe llenar al menos un campo para poder buscar");
       return;
     }
@@ -100,13 +104,10 @@ const Appointment = () => {
       {usuarioActivo === "User" && (
         <ViewUserAppointment
           showClasses={showClasses}
-          setinputSearchDate={setinputSearchDate}
-          reserve={reserve}
-          inputSearch={inputSearch}
-          setinputSearch={setinputSearch}
+          setInputData={setInputData}
+          inputData={inputData}
           handleSubmitSearch={handleSubmitSearch}
           showErrorSearch={showErrorSearch}
-          inputSearchDate={inputSearchDate}
         />
       )}
 

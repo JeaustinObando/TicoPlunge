@@ -2,15 +2,13 @@ import React from "react";
 
 const ViewNoneloginFeedback = ({
   handleSubmit,
-  setInputRating,
-  inputComentario,
-  setinputComentario,
+  setInputData,
+  inputData,
   showErroresForm,
-  showComentarios,
-  deleteComentariosBD,
+  comentarios,
+  deleteComentario,
   renderStars,
 }) => {
-
   return (
     <div className="FeedbackStyle">
       <div className="rating-card">
@@ -21,81 +19,27 @@ const ViewNoneloginFeedback = ({
           </div>
 
           <div className="rating-stars-container">
-            <input
-              value="5"
-              name="rate"
-              id="star5"
-              type="radio"
-              onChange={() => setInputRating("5")}
-            />
-            <label htmlFor="star5" className="star-label">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
-                  pathLength="360"
-                ></path>
-              </svg>
-            </label>
-            <input
-              value="4"
-              name="rate"
-              id="star4"
-              type="radio"
-              onChange={() => setInputRating("4")}
-            />
-            <label htmlFor="star4" className="star-label">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
-                  pathLength="360"
-                ></path>
-              </svg>
-            </label>
-            <input
-              value="3"
-              name="rate"
-              id="star3"
-              type="radio"
-              onChange={() => setInputRating("3")}
-            />
-            <label htmlFor="star3" className="star-label">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
-                  pathLength="360"
-                ></path>
-              </svg>
-            </label>
-            <input
-              value="2"
-              name="rate"
-              id="star2"
-              type="radio"
-              onChange={() => setInputRating("2")}
-            />
-            <label htmlFor="star2" className="star-label">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
-                  pathLength="360"
-                ></path>
-              </svg>
-            </label>
-            <input
-              value="1"
-              name="rate"
-              id="star1"
-              type="radio"
-              onChange={() => setInputRating("1")}
-            />
-            <label htmlFor="star1" className="star-label">
-              <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                <path
-                  d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
-                  pathLength="360"
-                ></path>
-              </svg>
-            </label>
+            {[...Array(5)].map((_, i) => (
+              <React.Fragment key={i}>
+                <input
+                  value={i + 1}
+                  name="rate"
+                  id={`star${i + 1}`}
+                  type="radio"
+                  onChange={() =>
+                    setInputData({ ...inputData, rating: `${i + 1}` })
+                  }
+                />
+                <label htmlFor={`star${i + 1}`} className="star-label">
+                  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                      d="M12,17.27L18.18,21L16.54,13.97L22,9.24L14.81,8.62L12,2L9.19,8.62L2,9.24L7.45,13.97L5.82,21L12,17.27Z"
+                      pathLength="360"
+                    ></path>
+                  </svg>
+                </label>
+              </React.Fragment>
+            ))}
           </div>
 
           <div className="input-group-prepend "></div>
@@ -103,8 +47,10 @@ const ViewNoneloginFeedback = ({
             type="text"
             id="inputComentario"
             className="form-control mt-3"
-            value={inputComentario}
-            onChange={(e) => setinputComentario(e.target.value)}
+            value={inputData.comentario}
+            onChange={(e) =>
+              setInputData({ ...inputData, comentario: e.target.value })
+            }
             required
           />
 
@@ -137,17 +83,17 @@ const ViewNoneloginFeedback = ({
 
       <div className="container mt-4 ">
         <div>
-          {showComentarios.length > 0 ? (
-            showComentarios.map((item, index) => (
-              <div key={index} className="feedbackBox m-4">
+          {comentarios.length > 0 ? (
+            comentarios.map((item) => (
+              <div key={item._id} className="feedbackBox m-4">
                 <span className="notititle">{item.usuario}</span>
                 <br></br>
-                <span>{renderStars(item.rating)}</span>
+                <span>{renderStars(parseInt(item.rating))}</span>
                 <br></br>
                 <span className="notibody">Comentario: {item.comentario}</span>
                 <button
                   className="btn btn-danger m-4"
-                  onClick={() => deleteComentariosBD(item._id)}
+                  onClick={() => deleteComentario(item._id)}
                 >
                   Borrar
                 </button>

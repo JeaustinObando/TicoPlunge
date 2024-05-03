@@ -1,23 +1,18 @@
 import React from "react";
 
 const ViewStafCreateClass = ({
-  inputService,
-  inputDate,
-  inputHour,
-  inputCapacity,
-  inputRepeatEveryMinutes,
-  inputRepeatNTimes,
-  inputRepeatWeekly,
+  inputData,
   showErroresForm,
   handleSubmit,
-  setinputService,
-  setinputDate,
-  setinputHour,
-  setInputCapacity,
-  setinputRepeatEveryMinutes,
-  setinputRepeatNTimes,
-  setinputRepeatWeekly,
+  setInputData,
 }) => {
+  const handleChange = (e, field) => {
+    setInputData({
+      ...inputData,
+      [field]: e.target.value,
+    });
+  };
+
   return (
     <div className="createClassStyle">
       <div className="form-container">
@@ -33,8 +28,8 @@ const ViewStafCreateClass = ({
             <select
               id="inputActivity"
               className="select-CreateClass"
-              value={inputService}
-              onChange={(e) => setinputService(e.target.value)}
+              value={inputData.service}
+              onChange={(e) => handleChange(e, "service")}
             >
               <option value="">Seleccione una opcion</option>
               <option value="box">Box</option>
@@ -47,8 +42,8 @@ const ViewStafCreateClass = ({
             <input
               type="date"
               id="inputDate"
-              value={inputDate}
-              onChange={(e) => setinputDate(e.target.value)}
+              value={inputData.date}
+              onChange={(e) => handleChange(e, "date")}
               min={new Date().toISOString().split("T")[0]}
               className="input-group-CreateClass input"
               required
@@ -59,8 +54,8 @@ const ViewStafCreateClass = ({
             <input
               type="time"
               id="inputHour"
-              value={inputHour}
-              onChange={(e) => setinputHour(e.target.value)}
+              value={inputData.hour}
+              onChange={(e) => handleChange(e, "hour")}
               className="input-group-CreateClass input"
               required
             />
@@ -70,8 +65,8 @@ const ViewStafCreateClass = ({
             <input
               type="number"
               id="inputCapacity"
-              value={inputCapacity}
-              onChange={(e) => setInputCapacity(e.target.value)}
+              value={inputData.capacity}
+              onChange={(e) => handleChange(e, "capacity")}
               min="1"
               max="500"
               required
@@ -88,8 +83,8 @@ const ViewStafCreateClass = ({
             <input
               type="number"
               id="inputRepeatEvery"
-              value={inputRepeatEveryMinutes}
-              onChange={(e) => setinputRepeatEveryMinutes(e.target.value)}
+              value={inputData.repeatEveryMinutes}
+              onChange={(e) => handleChange(e, "repeatEveryMinutes")}
               className="input-group-CreateClass input"
               min="1"
               max="999"
@@ -102,8 +97,8 @@ const ViewStafCreateClass = ({
             <input
               type="number"
               id="inputRepeatFor"
-              value={inputRepeatNTimes}
-              onChange={(e) => setinputRepeatNTimes(e.target.value)}
+              value={inputData.repeatNTimes}
+              onChange={(e) => handleChange(e, "repeatNTimes")}
               className="input-group-CreateClass input"
               min="1"
               max="100"
@@ -116,8 +111,8 @@ const ViewStafCreateClass = ({
             <input
               type="number"
               id="inputRepeatWeekly"
-              value={inputRepeatWeekly}
-              onChange={(e) => setinputRepeatWeekly(e.target.value)}
+              value={inputData.repeatWeekly}
+              onChange={(e) => handleChange(e, "repeatWeekly")}
               className="input-group-CreateClass input"
               min="1"
               max="52"

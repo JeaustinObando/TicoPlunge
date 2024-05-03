@@ -26,8 +26,10 @@ const Feedback = () => {
   // -------------------------------------------------------------
   // Seran input
   // -------------------------------------------------------------
-  const [inputComentario, setinputComentario] = useState("");
-  const [inputRating, setInputRating] = useState("");
+  const [inputData, setInputData] = useState({
+    comentario: "",
+    rating: "",
+  });
 
   // -------------------------------------------------------------
   // Cada vez que carga la pantalla
@@ -41,9 +43,9 @@ const Feedback = () => {
   // -------------------------------------------------------------
   const createComentariosBD = async () => {
     const newComentario = {
-      comentario: inputComentario,
+      comentario: inputData.comentario,
       usuario: usuarioActivo,
-      rating: inputRating,
+      rating: inputData.rating,
     };
 
     // Manda a crear el comentario a la base de datos
@@ -102,7 +104,7 @@ const Feedback = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (!inputRating || !inputComentario) {
+    if (!inputData.rating || !inputData.comentario) {
       setshowErroresForm("Debe llenar las estrellas y el comentario");
       return;
     }
@@ -114,34 +116,21 @@ const Feedback = () => {
   return (
     <>
       {usuarioActivo === "Admin" && (
-        <ViewAdminFeedback
-          showComentarios={showComentarios}
-          deleteComentariosBD={deleteComentariosBD}
-          renderStars={renderStars}
-        />
+        <ViewAdminFeedback renderStars={renderStars} />
       )}
 
       {usuarioActivo === "User" && (
-        <ViewUserFeedback
-          handleSubmit={handleSubmit}
-          setInputRating={setInputRating}
-          inputComentario={inputComentario}
-          setinputComentario={setinputComentario}
-          showErroresForm={showErroresForm}
-          showComentarios={showComentarios}
-          renderStars={renderStars}
-        />
+        <ViewUserFeedback renderStars={renderStars} />
       )}
 
       {usuarioActivo !== "Admin" && usuarioActivo !== "User" && (
         <ViewNoneloginFeedback
           handleSubmit={handleSubmit}
-          setInputRating={setInputRating}
-          inputComentario={inputComentario}
-          setinputComentario={setinputComentario}
+          setInputData={setInputData}
+          inputData={inputData}
           showErroresForm={showErroresForm}
-          showComentarios={showComentarios}
-          deleteComentariosBD={deleteComentariosBD}
+          comentarios={showComentarios}
+          deleteComentario={deleteComentariosBD}
           renderStars={renderStars}
         />
       )}
