@@ -1,6 +1,6 @@
 import React from "react";
 
-const ViewUser = ({
+const ViewUserAppointment = ({
   showClasses,
   reserve,
   handleSubmitSearch,
@@ -36,7 +36,7 @@ const ViewUser = ({
               />
             </div>
 
-            {/* por si hay un error en el form se muetre*/}
+            {/* por si hay un error en el form de buscar se muetre*/}
             <div className={`error m-3 ${showErrorSearch ? "" : "d-none"}`}>
               <div class="error__icon">
                 <svg
@@ -55,7 +55,7 @@ const ViewUser = ({
               <div class="error__title">{showErrorSearch}</div>
             </div>
 
-            <button type="submit" className="btn btn-primary mb-2">
+            <button type="submit" className="btn btn-primary m-4">
               Buscar
             </button>
           </form>
@@ -92,4 +92,4 @@ const ViewUser = ({
   );
 };
 
-export default ViewUser;
+export default ViewUserAppointment;

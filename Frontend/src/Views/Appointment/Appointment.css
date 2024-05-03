@@ -1,6 +1,8 @@
 .AppointmentStyle {
+  /* background-color: rgb(16, 15, 15); 
   min-height: calc(100vh - 44px);
-  padding: 1px;
+  color: white;*/
+  margin: 0;
 }
 
 /* ---------------------------------------
@@ -50,8 +52,8 @@
 /* ---------------------------------------
 --  Estilo para form de buscar
 ------------------------------------------ */
-.input-date{
-  border-color: #0B5ED6;
+.input-date {
+  border-color: #0b5ed6;
   border-radius: 10px;
   padding: 10px;
 }

@@ -1,6 +1,6 @@
 import React from "react";
 
-const ViewNonelogin = ({
+const ViewNoneloginFeedback = ({
   handleSubmit,
   setInputRating,
   inputComentario,
@@ -10,39 +10,14 @@ const ViewNonelogin = ({
   deleteComentariosBD,
   renderStars,
 }) => {
-  // return (
-  //   <div className="FeedbackStyle">
-  //     <div className="container mt-4 ">
-  //       <h2>Debe logearse para poder dejar un comentario</h2>
-  //       <div>
-  //         {showComentarios.length > 0 ? (
-  //           showComentarios.map((item, index) => (
-  //             <div key={index} className="feedbackBox m-4">
-  //               <span className="notititle">{item.usuario}</span>
-  //               <br></br>
-  //               <span>{renderStars(item.rating)}</span>
-  //               <br></br>
-  //               <span className="notibody mb-4">
-  //                 Comentario: {item.comentario}
-  //               </span>
-  //             </div>
-  //           ))
-  //         ) : (
-  //           <div className="no-data">
-  //             <h2>No hay datos disponibles</h2>
-  //           </div>
-  //         )}
-  //       </div>
-  //     </div>
-  //   </div>
-  // );
+
   return (
     <div className="FeedbackStyle">
       <div className="rating-card">
         <form onSubmit={handleSubmit}>
           <div className="text-wrapper">
-            <p className="text-primary">Deja tu comentario</p>
-            <p className="text-secondary">Nos gustaría saber tu opinión</p>
+            <p className="text-title">Deja tu comentario</p>
+            <p className="text-subtitle">Nos gustaría saber tu opinión</p>
           </div>
 
           <div className="rating-stars-container">
@@ -189,4 +164,4 @@ const ViewNonelogin = ({
   );
 };
 
-export default ViewNonelogin;
+export default ViewNoneloginFeedback;

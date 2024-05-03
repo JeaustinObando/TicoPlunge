@@ -1,5 +1,9 @@
 # TicoPlunche
 
+## By
+- Isaac Meléndez Gatgens
+
+
 ## Información del Proyecto
 
 - Última Edición: 25 / 4/ 2024
@@ -22,15 +26,14 @@ Primero, navegue hasta el directorio del proyecto backend y ejecute el siguiente
 npm install
 ```
 
-Luego una vez instaladas las dependencias 
+Luego una vez instaladas las dependencias
+
 ```
 node server.js
 ```
 
-por defecto corre en el puerto: 
+por defecto corre en el puerto:
 
 ### http://localhost:8080/
 
 Se debe ejecutar junto con el frontend para que funcione correctamente
-
-## Isaac Meléndez Gatgens

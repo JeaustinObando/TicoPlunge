@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./Feedback.css";
-import ViewAdmin from "./ViewAdmin";
-import ViewUser from "./ViewUser";
-import ViewNonelogin from "./ViewNonelogin";
+import ViewAdminFeedback from "./ViewAdminFeedback";
+import ViewUserFeedback from "./ViewUserFeedback";
+import ViewNoneloginFeedback from "./ViewNoneloginFeedback";
 import {
   createToBD,
   deleteByIDToBD,
@@ -103,7 +103,7 @@ const Feedback = () => {
     event.preventDefault();
 
     if (!inputRating || !inputComentario) {
-      setshowErroresForm("Debe llenar todos los campos");
+      setshowErroresForm("Debe llenar las estrellas y el comentario");
       return;
     }
 
@@ -114,7 +114,7 @@ const Feedback = () => {
   return (
     <>
       {usuarioActivo === "Admin" && (
-        <ViewAdmin
+        <ViewAdminFeedback
           showComentarios={showComentarios}
           deleteComentariosBD={deleteComentariosBD}
           renderStars={renderStars}
@@ -122,7 +122,7 @@ const Feedback = () => {
       )}
 
       {usuarioActivo === "User" && (
-        <ViewUser
+        <ViewUserFeedback
           handleSubmit={handleSubmit}
           setInputRating={setInputRating}
           inputComentario={inputComentario}
@@ -134,7 +134,7 @@ const Feedback = () => {
       )}
 
       {usuarioActivo !== "Admin" && usuarioActivo !== "User" && (
-        <ViewNonelogin
+        <ViewNoneloginFeedback
           handleSubmit={handleSubmit}
           setInputRating={setInputRating}
           inputComentario={inputComentario}

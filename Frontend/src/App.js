@@ -17,7 +17,7 @@ function App() {
             <Route path="/Feedback" element={<Feedback />} />
             <Route path="/CreateClass" element={<CreateClass />} />
             <Route path="/AppointmentForm" element={<Appointment />} />
-            <Route path="*" element={<NotFound mensaje="Página no encontrada" />} />
+            <Route path="*" element={<NotFound mensaje="La página que busca no existe" />} />
           </Route>
         </Routes>
       </BrowserRouter>

@@ -1,13 +1,14 @@
 import { useEffect, useState } from "react";
 import "./Appointment.css";
-import ViewAdmin from "./ViewAdmin";
-import ViewUser from "./ViewUser";
+import ViewAdminAppointment from "./ViewAdminAppointment";
+import ViewUserAppointment from "./ViewUserAppointment";
 import {
   createToBD,
   deleteByIDToBD,
   selectFilterToBD,
   selectToBD,
   urlAppointment,
+  NotFound,
 } from "../../GlobalVariables";
 
 const Appointment = () => {
@@ -43,9 +44,15 @@ const Appointment = () => {
   // seleciona las variables y les agrega un boton de borrar a la par
   // -------------------------------------------------------------
   const selectClassBD = async () => {
-    const response = await selectToBD(urlAppointment);
+    const fechaActual = new Date();
+    let filtro = {
+      date: { $gt: fechaActual } // Filtra las clases con fecha mayor a la fecha actual
+    };
+  
+    const response = await selectFilterToBD(urlAppointment, filtro);
     setshowClasses(response);
   };
+  
 
   const searchByAnyBD = async () => {
     // filtro al buscar
@@ -84,11 +91,14 @@ const Appointment = () => {
   return (
     <>
       {usuarioActivo === "Admin" && (
-        <ViewAdmin showClasses={showClasses} reserve={reserveAsAdmin} />
+        <ViewAdminAppointment
+          showClasses={showClasses}
+          reserve={reserveAsAdmin}
+        />
       )}
 
       {usuarioActivo === "User" && (
-        <ViewUser
+        <ViewUserAppointment
           showClasses={showClasses}
           setinputSearchDate={setinputSearchDate}
           reserve={reserve}
@@ -101,7 +111,7 @@ const Appointment = () => {
       )}
 
       {usuarioActivo !== "Admin" && usuarioActivo !== "User" && (
-        <h2>Debe logearse</h2>
+        <NotFound mensaje="Por favor, inicia sesión para continuar" />
       )}
     </>
   );

@@ -50,7 +50,7 @@ button:active  {
 .NotFound {
   background-color: rgb(16, 15, 15);
   min-height: calc(100vh - 44px);
-  padding: 1px;
+  padding: 30px;
   color: white;
 }
 
