@@ -9,6 +9,8 @@ import {
   selectFilterToBD,
   urlClass,
   NotFound,
+  SuccessAlert,
+  ErrorAlert,
 } from "../../GlobalVariables";
 
 const CreateClass = () => {
@@ -62,7 +64,7 @@ const CreateClass = () => {
       await axios.post(urlClass, newClass, config);
       return true; // Retorna true si se crea con éxito
     } catch (error) {
-      console.error("Error al insertar documento en MongoDB:", error);
+      // console.error("Error al insertar documento en MongoDB:", error);
       return false; // Retorna false si hay un error
     }
   };
@@ -121,17 +123,25 @@ const CreateClass = () => {
         }
       } else {
         allCreated = false;
-        alert(
-          `La clase para ${appointment.date} a las ${appointment.hour} ya existe.`
-        );
+        const message = `La clase para ${appointment.date} a las ${appointment.hour} ya existe.`;
+
+        setshowErroresForm(<ErrorAlert message={message} />);
         break;
       }
     }
 
     if (allCreated) {
-      alert("Todos creados con éxito");
+      setshowErroresForm(<SuccessAlert message="Todos creados con éxito" />);
+      setTimeout(() => {
+        setshowErroresForm("");
+      }, 5000);
     } else {
-      alert("Algunos no se pudieron crear o ya existían");
+      setshowErroresForm(
+        <ErrorAlert message="Algunos no se pudieron crear o ya existían" />
+      );
+      setTimeout(() => {
+        setshowErroresForm("");
+      }, 5000);
     }
   };
 
@@ -144,7 +154,9 @@ const CreateClass = () => {
       !inputData.hour ||
       !inputData.service
     ) {
-      setshowErroresForm("Debe llenar al menos los que tienen un simbolo (*)");
+      setshowErroresForm(
+        <ErrorAlert message="Debe llenar al menos los que tienen un simbolo (*)" />
+      );
       return;
     }
 
@@ -153,7 +165,7 @@ const CreateClass = () => {
     if (confirmacion) {
       createAppointments();
     } else {
-      alert("Acción cancelada.");
+      setshowErroresForm(<ErrorAlert message="Acción cancelada." />);
     }
   };
 

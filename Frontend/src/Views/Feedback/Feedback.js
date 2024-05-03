@@ -9,6 +9,8 @@ import {
   deleteByIDToBD,
   selectToBD,
   urlFeedback,
+  SuccessAlert,
+  ErrorAlert,
 } from "../../GlobalVariables";
 
 const Feedback = () => {
@@ -49,10 +51,14 @@ const Feedback = () => {
     };
 
     // Manda a crear el comentario a la base de datos
-    createToBD(urlFeedback, newComentario).then(() => {
-      // Si tiene éxito, llama al método selectComentariosBD.
-      selectComentariosBD();
-    });
+    const response = await createToBD(urlFeedback, newComentario);
+
+    await selectComentariosBD();
+
+    setshowErroresForm(response);
+    setTimeout(() => {
+      setshowErroresForm("");
+    }, 5000);
   };
 
   // -------------------------------------------------------------
@@ -105,7 +111,9 @@ const Feedback = () => {
     event.preventDefault();
 
     if (!inputData.rating || !inputData.comentario) {
-      setshowErroresForm("Debe llenar las estrellas y el comentario");
+      setshowErroresForm(
+        <ErrorAlert message="Debe llenar las estrellas y el comentario" />
+      );
       return;
     }
 

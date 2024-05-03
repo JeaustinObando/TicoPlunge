@@ -125,6 +125,95 @@ MongoClient.connect(mongoURI)
         });
     });
 
+
+
+
+
+
+
+    
+
+    // Ruta para manejar las solicitudes GET a /clases
+    app.get("/clases", (req, res) => {
+      const filtro = req.query.filtro; // Obtenemos el filtro de la consulta
+      // Si hay un filtro en la consulta, lo utilizamos en la consulta a la base de datos
+      if (filtro) {
+        const filtroObj = JSON.parse(filtro);
+
+        db.collection("class")
+          .find(filtroObj)
+          .toArray()
+          .then((data) => {
+            res.json(data); // Devuelve los datos como JSON
+          })
+          .catch((error) => {
+            console.error("Error al consultar datos en MongoDB:", error);
+            res
+              .status(500)
+              .json({ error: "Error al consultar datos en MongoDB" });
+          });
+      } else {
+        // Si no hay filtro en la consulta, simplemente obtenemos todas las clases
+        db.collection("class")
+          .find()
+          .toArray()
+          .then((data) => {
+            res.json(data); // Devuelve los datos como JSON
+          })
+          .catch((error) => {
+            console.error("Error al consultar datos en MongoDB:", error);
+            res
+              .status(500)
+              .json({ error: "Error al consultar datos en MongoDB" });
+          });
+      }
+    });
+
+    // Ruta para manejar las solicitudes POST a /clases
+    app.post("/clases", (req, res) => {
+      // Extraer los datos de la clase del cuerpo de la solicitud
+      const clase = req.body;
+
+      // Insertar los datos de la clase en la colección de MongoDB
+      db.collection("class")
+        .insertOne(clase)
+        .then((result) => {
+          if (result && result.insertedId) {
+            res.status(201).json({ message: "Clase agregada exitosamente." });
+          } else {
+            console.error("No se pudo agregar la clase.");
+            res
+              .status(500)
+              .json({ error: "Error al agregar clase en MongoDB" });
+          }
+        })
+        .catch((error) => {
+          console.error("Error al agregar clase en MongoDB:", error);
+          res.status(500).json({ error: "Error al agregar clase en MongoDB" });
+        });
+    });
+
+    // Ruta para manejar las solicitudes DELETE a /clases/:id
+    app.delete("/clases/:id", (req, res) => {
+      const claseId = req.params.id;
+
+      // Eliminar la clase de la colección de MongoDB
+      db.collection("class")
+        .deleteOne({ _id: new ObjectId(claseId) }) // Utiliza new para crear un nuevo objeto ObjectId
+        .then((result) => {
+          if (result.deletedCount === 1) {
+            res.status(200).json({ message: "Clase eliminada exitosamente." });
+          } else {
+            console.error("No se pudo encontrar la clase para eliminar.");
+            res.status(404).json({ error: "Clase no encontrada." });
+          }
+        })
+        .catch((error) => {
+          console.error("Error al eliminar clase en MongoDB:", error);
+          res.status(500).json({ error: "Error al eliminar clase en MongoDB" });
+        });
+    });
+
     // Inicia el servidor Express en el puerto especificado
     app.listen(port, () => {
       console.log(`Servidor Express iniciado en http://localhost:${port}`);
