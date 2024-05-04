@@ -43,7 +43,7 @@ const Signup = () => {
 					<h1>Welcome Back</h1>
 					<Link to="/login">
 						<button type="button" className="white_btn">
-							Sing in
+							Sign In
 						</button>
 					</Link>
 				</div>
