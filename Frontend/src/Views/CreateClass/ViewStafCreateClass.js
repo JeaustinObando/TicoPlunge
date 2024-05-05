@@ -124,7 +124,7 @@ const ViewStafCreateClass = ({
             {showErroresForm}
           </div>
 
-          <button type="submit" className="buttomCreate">
+          <button type="submit" className="buttomCreate mt-4">
             Crear Clase
           </button>
         </form>
