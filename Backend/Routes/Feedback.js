@@ -6,9 +6,6 @@ const { Feedback } = require("../Models/FeedbackModel");
 router.get("/", async (req, res) => {
   try {
     const comentarios = await Feedback.find(); // Obtenemos todos los comentarios
-
-    console.log(comentarios);
-
     res.json(comentarios); // Devolvemos los comentarios como JSON
   } catch (error) {
     console.error("Error al consultar comentarios en MongoDB:", error);
@@ -22,9 +19,6 @@ router.get("/", async (req, res) => {
 router.post("/", async (req, res) => {
   // Extraemos los datos del comentario del cuerpo de la solicitud
   const comentario = req.body;
-
-  console.log(req);
-
   try {
     const nuevoComentario = await Feedback.create(comentario); // Creamos un nuevo comentario
     res.status(201).json({
