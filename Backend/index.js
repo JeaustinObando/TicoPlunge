@@ -4,7 +4,7 @@ const app = express();
 const cors = require("cors");
 const connection = require("./db");
 const FeedbackRoutes = require("./Routes/Feedback");
-// const ClassRoutes = require("./Routes/Class");
+const ClassRoutes = require("./Routes/Class");
 
 // database connection
 connection();
@@ -15,7 +15,7 @@ app.use(cors());
 
 // routes
 app.use("/comentarios", FeedbackRoutes);
-// app.use("/api/Class", ClassRoutes);
+app.use("/class", ClassRoutes);
 
 const port = process.env.PORT || 8080;
 app.listen(port, console.log(`Listening on port ${port}...`));

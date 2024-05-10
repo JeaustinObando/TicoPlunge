@@ -70,11 +70,10 @@ const CreateClass = () => {
           "Content-Type": "application/json",
         },
       };
-
       await axios.post(urlClass, newClass, config);
       return true; // Retorna true si se crea con éxito
     } catch (error) {
-      // console.error("Error al insertar documento en MongoDB:", error);
+      console.error("Error al insertar documento en MongoDB:", error);
       return false; // Retorna false si hay un error
     }
   };
@@ -124,6 +123,8 @@ const CreateClass = () => {
           { service: inputData.service },
         ],
       };
+      // console.log("vamos");
+
       const response = await selectFilterToBD(urlClass, exist);
       if (response.length === 0) {
         const success = await createClassBD(

@@ -6,8 +6,8 @@ import axios from "axios";
 export const baseUrl = "http://localhost:8080";
 
 export const urlFeedback = `${baseUrl}/comentarios`;
-export const urlAppointment = `${baseUrl}/clases`;
-export const urlClass = `${baseUrl}/clases`;
+export const urlAppointment = `${baseUrl}/class`;
+export const urlClass = `${baseUrl}/class`;
 
 // -------------------------------------------------------------
 // funciones globlaes

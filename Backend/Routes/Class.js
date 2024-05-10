@@ -1,80 +1,67 @@
 const router = require("express").Router();
+const { Class, validateClass } = require("../Models/ClassModel");
 
-router.get("/", (req, res) => {
-  const filtro = req.query.filtro; // Obtenemos el filtro de la consulta
-  // console.log(filtro);
-  // Si hay un filtro en la consulta, lo utilizamos en la consulta a la base de datos
-  if (filtro) {
-    const filtroObj = JSON.parse(filtro);
+// Ruta para obtener todas las clases
+router.get("/", async (req, res) => {
+  try {
+    // Obtenemos el filtro de la consulta
+    const filtro = req.query.filtro;
 
-    db.collection("comentarios")
-      .find(filtroObj)
-      .toArray()
-      .then((data) => {
-        res.json(data); // Devuelve los datos como JSON
-      })
-      .catch((error) => {
-        console.error("Error al consultar datos en MongoDB:", error);
-        res.status(500).json({ error: "Error al consultar datos en MongoDB" });
-      });
-  } else {
-    // Si no hay filtro en la consulta, simplemente obtenemos todos los comentarios
-    db.collection("comentarios")
-      .find()
-      .toArray()
-      .then((data) => {
-        res.json(data); // Devuelve los datos como JSON
-      })
-      .catch((error) => {
-        console.error("Error al consultar datos en MongoDB:", error);
-        res.status(500).json({ error: "Error al consultar datos en MongoDB" });
-      });
+    // Si hay un filtro en la consulta, lo utilizamos en la consulta a la base de datos
+    let clases;
+    if (filtro) {
+      // Convierte el filtro de cadena JSON a objeto
+      const filtroObj = JSON.parse(filtro);
+      clases = await Class.find(filtroObj);
+    } else {
+      // Si no hay filtro en la consulta, simplemente obtenemos todas las clases
+      clases = await Class.find();
+    }
+
+    res.json(clases); // Devuelve las clases como JSON
+  } catch (error) {
+    console.error("Error al consultar clases en MongoDB:", error);
+    res.status(500).json({ error: "Error al consultar clases en MongoDB" });
   }
 });
 
-// Ruta para manejar las solicitudes POST a /comentarios
-router.post("/", (req, res) => {
-  // Extraer los datos del comentario del cuerpo de la solicitud
-  const comentario = req.body;
+// Ruta para agregar una nueva clase
+router.post("/", async (req, res) => {
+  // Extraemos los datos de la clase del cuerpo de la solicitud
+  const claseData = req.body;
 
-  // Insertar los datos del comentario en la colección de MongoDB
-  db.collection("comentarios")
-    .insertOne(comentario)
-    .then((result) => {
-      if (result && result.insertedId) {
-        res.status(201).json({ message: "Comentario agregado exitosamente." });
-      } else {
-        console.error("No se pudo agregar el comentario.");
-        res
-          .status(500)
-          .json({ error: "Error al agregar comentario en MongoDB" });
-      }
-    })
-    .catch((error) => {
-      console.error("Error al agregar comentario en MongoDB:", error);
-      res.status(500).json({ error: "Error al agregar comentario en MongoDB" });
+  // Validamos los datos de la clase
+  const { error } = validateClass(claseData);
+  if (error) return res.status(400).send(error.details[0].message);
+
+  try {
+    const nuevaClase = await Class.create(claseData); // Creamos una nueva clase
+    res.status(201).json({
+      message: "Clase agregada exitosamente.",
+      clase: nuevaClase,
     });
+  } catch (error) {
+    console.error("Error al agregar clase en MongoDB:", error);
+    res.status(500).json({ error: "Error al agregar clase en MongoDB" });
+  }
 });
 
-// Ruta para manejar las solicitudes DELETE a /comentarios/:id
-router.delete("/:id", (req, res) => {
-  const comentarioId = req.params.id;
+// Ruta para eliminar una clase por su ID
+router.delete("/:id", async (req, res) => {
+  const claseId = req.params.id;
 
-  // Eliminar el comentario de la colección de MongoDB
-  db.collection("comentarios")
-    .deleteOne({ _id: new ObjectId(comentarioId) }) // Utiliza new para crear un nuevo objeto ObjectId
-    .then((result) => {
-      if (result.deletedCount === 1) {
-        res.status(200).json({ message: "Comentario eliminado exitosamente." });
-      } else {
-        console.error("No se pudo encontrar el comentario para eliminar.");
-        res.status(404).json({ error: "Comentario no encontrado." });
-      }
-    })
-    .catch((error) => {
-      console.error("Error al eliminar comentario en MongoDB:", error);
-      res
-        .status(500)
-        .json({ error: "Error al eliminar comentario en MongoDB" });
-    });
+  try {
+    const resultado = await Class.deleteOne({ _id: claseId }); // Eliminamos la clase por su ID
+    if (resultado.deletedCount === 1) {
+      res.status(200).json({ message: "Clase eliminada exitosamente." });
+    } else {
+      console.error("No se pudo encontrar la clase para eliminar.");
+      res.status(404).json({ error: "Clase no encontrada." });
+    }
+  } catch (error) {
+    console.error("Error al eliminar clase en MongoDB:", error);
+    res.status(500).json({ error: "Error al eliminar clase en MongoDB" });
+  }
 });
+
+module.exports = router;
