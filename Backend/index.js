@@ -5,6 +5,8 @@ const cors = require("cors");
 const connection = require("./db");
 const FeedbackRoutes = require("./Routes/Feedback");
 const ClassRoutes = require("./Routes/Class");
+const userRoutes = require("./Routes/users");
+const authRoutes = require("./Routes/authenticator");
 
 // database connection
 connection();
@@ -14,6 +16,8 @@ app.use(express.json());
 app.use(cors());
 
 // routes
+app.use("/register", userRoutes);
+app.use("/auth", authRoutes);
 app.use("/comentarios", FeedbackRoutes);
 app.use("/class", ClassRoutes);
 

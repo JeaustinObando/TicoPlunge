@@ -10,6 +10,7 @@ import {
   selectToBD,
   urlFeedback,
   SuccessAlert,
+  selectUserByToken,
   ErrorAlert,
 } from "../../GlobalVariables";
 
@@ -19,7 +20,7 @@ const Feedback = () => {
   // -------------------------------------------------------------
   // Variables basura que hay q borrar solo son para probar
   // -------------------------------------------------------------
-  const [usuarioActivo, setUsuarioActivo] = useState("as");
+  const [usuarioActivo, setUsuarioActivo] = useState("User");
 
   // -------------------------------------------------------------
   // Estas se mostraran en el HTML
@@ -35,10 +36,18 @@ const Feedback = () => {
     rating: "",
   });
 
+  const GetUserActive = async () => {
+    const token = localStorage.getItem("token");
+    const user = await selectUserByToken(token);
+    setUsuarioActivo(user.firstName);
+  };
+
   // -------------------------------------------------------------
   // Cada vez que carga la pantalla
   // -------------------------------------------------------------
   useEffect(() => {
+    GetUserActive();
+
     selectComentariosBD();
   }, []); // El segundo argumento vacío asegura que se llame solo una vez al cargar la página
 

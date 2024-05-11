@@ -6,7 +6,7 @@ function Navbar() {
   return (
     <div>
       <div className="containe-navbar">
-        <Link to="/login" className="link-navbar">
+        <Link to="/LogIn" className="link-navbar">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             width="24"

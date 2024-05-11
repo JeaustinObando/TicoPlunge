@@ -9,7 +9,9 @@ const ViewUserFeedback = ({
   showComentarios,
   renderStars,
 }) => {
-  return <div className="FeedbackStyle"></div>;
+  return <div className="FeedbackStyle">
+    <h2>hola</h2>
+  </div>;
 };
 
 export default ViewUserFeedback;
