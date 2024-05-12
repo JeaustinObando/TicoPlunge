@@ -8,6 +8,7 @@ const classSchema = new mongoose.Schema(
     usuario: { type: String, required: true },
     service: { type: String, required: true },
     capacity: { type: Number, required: true },
+    students: [{ type: String }], // Lista de estudiantes
   },
   { strict: "throw" }
 );
@@ -19,6 +20,7 @@ const validateClass = (data) => {
     usuario: Joi.string().required().label("Usuario"),
     service: Joi.string().required().label("Service"),
     capacity: Joi.number().integer().min(1).required().label("Capacity"),
+    students: Joi.array().items(Joi.string()).label("Students"), // Validación para la lista de estudiantes
   });
   return schema.validate(data);
 };

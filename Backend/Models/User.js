@@ -3,17 +3,21 @@ const jwt = require("jsonwebtoken");
 const Joi = require("joi");
 const passwordComplexity = require("joi-password-complexity");
 
-const userSchema = new mongoose.Schema({
-  firstName: { type: String, required: true },
-  lastName: { type: String, required: true },
-  email: { type: String, required: true, unique: true }, // Ensure email is unique
-  password: { type: String, required: true },
-  role: {
-    type: String,
-    required: true,
-    enum: ["Administrator", "Staff", "Client"],
-  }, // New field for role
-});
+const userSchema = new mongoose.Schema(
+  {
+    firstName: { type: String, required: true },
+    lastName: { type: String, required: true },
+    email: { type: String, required: true, unique: true }, // Ensure email is unique
+    password: { type: String, required: true },
+    role: {
+      type: String,
+      required: true,
+      enum: ["Administrator", "Staff", "Client"],
+    },
+    creditos: { type: Number, default: 0, min: 0 } // Nuevo campo "creditos"
+  },
+  { strict: "throw" }
+);
 
 // Modify the token generation to include the user role
 userSchema.methods.generateAuthToken = function () {
@@ -44,6 +48,7 @@ const validate = (data) => {
       .valid("Administrator", "Staff", "Client")
       .required()
       .label("Role"), // Validation for role
+    creditos: Joi.number().min(0).label("Credits") // Validación para el campo "creditos"
   });
   return schema.validate(data);
 };

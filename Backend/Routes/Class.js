@@ -1,5 +1,6 @@
 const router = require("express").Router();
 const { Class, validateClass } = require("../Models/ClassModel");
+const { User, validate } = require("../Models/User");
 
 // Ruta para obtener todas las clases
 router.get("/", async (req, res) => {
@@ -35,7 +36,22 @@ router.post("/", async (req, res) => {
   if (error) return res.status(400).send(error.details[0].message);
 
   try {
-    const nuevaClase = await Class.create(claseData); // Creamos una nueva clase
+    // Verificar si ya existe una clase con los mismos datos de fecha, hora, usuario y servicio
+    const existingClass = await Class.findOne({
+      date: claseData.date,
+      hour: claseData.hour,
+      usuario: claseData.usuario,
+      service: claseData.service,
+    });
+
+    if (existingClass) {
+      return res
+        .status(400)
+        .json({ error: "Ya existe una clase con estos mismos datos." });
+    }
+
+    // Si no existe, creamos una nueva clase
+    const nuevaClase = await Class.create(claseData);
     res.status(201).json({
       message: "Clase agregada exitosamente.",
       clase: nuevaClase,
@@ -61,6 +77,54 @@ router.delete("/:id", async (req, res) => {
   } catch (error) {
     console.error("Error al eliminar clase en MongoDB:", error);
     res.status(500).json({ error: "Error al eliminar clase en MongoDB" });
+  }
+});
+
+router.post("/reserve", async (req, res) => {
+  const { userId, classId } = req.body;
+
+  try {
+    // Buscar el usuario por su ID
+    const user = await User.findById(userId);
+
+    // Verificar si se encontró el usuario
+    if (!user) {
+      return res.status(404).json({ error: "Usuario no encontrado" });
+    }
+
+    // Verificar si el usuario tiene créditos suficientes
+    if (user.creditos === 0) {
+      return res.status(400).json({ error: "Créditos insuficientes" });
+    }
+
+    // Buscar la clase por su ID
+    const clase = await Class.findById(classId);
+
+    // Verificar si se encontró la clase
+    if (!clase) {
+      return res.status(404).json({ error: "Clase no encontrada" });
+    }
+
+    // Verificar si el usuario ya está inscrito en la clase
+    if (clase.students.includes(userId)) {
+      return res
+        .status(400)
+        .json({ error: "Usuario ya inscrito en esta clase" });
+    }
+
+    // Restar 1 al campo de créditos del usuario
+    user.creditos -= 1;
+
+    // Agregar el ID del usuario a la lista de estudiantes de la clase
+    clase.students.push(userId);
+
+    // Guardar los cambios en la base de datos
+    await Promise.all([user.save(), clase.save()]);
+
+    res.status(200).json({ message: "Clase reservada exitosamente" });
+  } catch (error) {
+    console.error("Error al procesar la reserva:", error);
+    res.status(500).json({ error: "Error al procesar la reserva" });
   }
 });
 

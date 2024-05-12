@@ -29,7 +29,7 @@ npm install
 Luego una vez instaladas las dependencias
 
 ```
-node server.js
+npm start
 ```
 
 por defecto corre en el puerto:

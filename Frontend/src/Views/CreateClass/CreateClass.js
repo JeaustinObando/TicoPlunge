@@ -3,9 +3,7 @@ import axios from "axios";
 import "./CreateClass.css";
 import ViewStafCreateClass from "./ViewStafCreateClass";
 import {
-  createToBD,
-  deleteByIDToBD,
-  selectToBD,
+  selectUserByToken,
   selectFilterToBD,
   urlClass,
   NotFound,
@@ -17,7 +15,7 @@ let timeWaitAlert = 8000;
 
 const CreateClass = () => {
   // -------------------------------------------------------------
-  // Variables basura que hay q borrar solo son para probar
+  // Se usara para optener los datos de la persona activa
   // -------------------------------------------------------------
   const [usuarioActivo, setUsuarioActivo] = useState("Staff");
 
@@ -39,14 +37,33 @@ const CreateClass = () => {
     capacity: "",
   });
 
-  // -------------------------------------------------------------
-  // Cada vez que carga la pantalla
-  // -------------------------------------------------------------
-  useEffect(() => {}, []); // El segundo argumento vacío asegura que se llame solo una vez al cargar la página
+  /**
+   * Función asincrónica para obtener y establecer el usuario activo utilizando el token de autenticación.
+   */
+  const GetUserActive = async () => {
+    const user = await selectUserByToken();
+    // setUsuarioActivo(user);
+  };
 
-  // -------------------------------------------------------------
-  // Crea las clases en la base de datos que se generaron en createAppointments
-  // -------------------------------------------------------------
+  /**
+   * Efecto secundario que se ejecuta al montar el componente (cargar la pagina)
+   * El segundo argumento vacío asegura que se llame solo una vez al cargar la página.
+   */
+  useEffect(() => {
+    // Llamar a la función para obtener y establecer el usuario activo
+    GetUserActive();
+  }, []);
+
+  /**
+   * Crea una nueva clase en la base de datos.
+   * @param {string} date - La fecha de la clase.
+   * @param {string} hour - La hora de la clase.
+   * @param {string} usuario - El usuario de la clase.
+   * @param {string} service - El servicio de la clase.
+   * @param {number} capacity - La capacidad de la clase.
+   * @returns {boolean} - True si se crea la clase con éxito, false si hay un error o si el usuario cancela.
+   */
+
   const createClassBD = async (date, hour, usuario, service, capacity) => {
     const newClass = {
       date: date,
@@ -70,7 +87,7 @@ const CreateClass = () => {
           "Content-Type": "application/json",
         },
       };
-      await axios.post(urlClass, newClass, config);
+      console.log(await axios.post(urlClass, newClass, config));
       return true; // Retorna true si se crea con éxito
     } catch (error) {
       console.error("Error al insertar documento en MongoDB:", error);
@@ -112,43 +129,22 @@ const CreateClass = () => {
       }
     }
 
-    // Verificar y crear cada cita en la base de datos
     let allCreated = true;
     for (const appointment of newAppointments) {
-      const exist = {
-        $and: [
-          { date: appointment.date },
-          { hour: appointment.hour },
-          { usuario: usuarioActivo },
-          { service: inputData.service },
-        ],
-      };
       // console.log("vamos");
 
-      const response = await selectFilterToBD(urlClass, exist);
-      if (response.length === 0) {
-        const success = await createClassBD(
-          appointment.date,
-          appointment.hour,
-          usuarioActivo,
-          inputData.service,
-          inputData.capacity
-        );
-        if (!success) {
-          allCreated = false;
-          setshowErroresForm(
-            <ErrorAlert message="Error al crear algunas citas." />
-          );
-          break;
-        }
-      } else {
+      const success = await createClassBD(
+        appointment.date,
+        appointment.hour,
+        usuarioActivo,
+        inputData.service,
+        inputData.capacity
+      );
+      if (!success) {
         allCreated = false;
-        setshowErroresForm(
-          <ErrorAlert
-            message={`La clase para ${appointment.date} a las ${appointment.hour} ya existe.`}
-          />
+        alert(
+          `La clase para ${appointment.date} a las ${appointment.hour} ya existe o hubo un error al crearla.`
         );
-        break;
       }
     }
 
@@ -157,7 +153,7 @@ const CreateClass = () => {
       setshowErroresForm(<SuccessAlert message="Todos creados con éxito" />);
     } else {
       setshowErroresForm(
-        <ErrorAlert message="Algunos no se pudieron crear o ya existían" />
+        <ErrorAlert message="Algunas ya existían o hubo un error al crearla." />
       );
     }
     setTimeout(() => {
@@ -165,6 +161,10 @@ const CreateClass = () => {
     }, timeWaitAlert);
   };
 
+  /**
+   * Maneja el envío del formulario para crear una nueva cita.
+   * @param {Event} e - El evento de envío del formulario.
+   */
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -191,7 +191,7 @@ const CreateClass = () => {
 
   return (
     <>
-      {(usuarioActivo === "Staff" || usuarioActivo === "Admin") && (
+      {(usuarioActivo === "Staff" || usuarioActivo === "Administrator") && (
         <ViewStafCreateClass
           inputData={inputData}
           showErroresForm={showErroresForm}
@@ -200,7 +200,7 @@ const CreateClass = () => {
         />
       )}
 
-      {usuarioActivo !== "Admin" && usuarioActivo !== "Staff" && (
+      {usuarioActivo !== "Administrator" && usuarioActivo !== "Staff" && (
         <NotFound mensaje="Por favor, inicia sesión para continuar" />
       )}
     </>

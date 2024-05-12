@@ -1,4 +1,11 @@
 import axios from "axios";
+
+// -------------------------------------------------------------
+// urls del front para redirigir
+// -------------------------------------------------------------
+export const redirectRegister = `/SignIn`;
+export const redirectLogin = `/LogIn`;
+
 // -------------------------------------------------------------
 // urls del backend
 // -------------------------------------------------------------
@@ -6,10 +13,11 @@ import axios from "axios";
 export const baseUrl = "http://localhost:8080";
 
 export const urlFeedback = `${baseUrl}/comentarios`;
-export const urlAppointment = `${baseUrl}/class`;
 export const urlClass = `${baseUrl}/class`;
 export const urlLogin = `${baseUrl}/auth`;
 export const urlSingIn = `${baseUrl}/register`;
+
+export const urlReserveClass = `${urlClass}/reserve`;
 
 // -------------------------------------------------------------
 // funciones globlaes
@@ -132,7 +140,12 @@ export const deleteByIDToBD = async (url, id) => {
   }
 };
 
-export const selectUserByToken = async (token) => {
+/**
+ * Función para seleccionar un usuario utilizando un token de autenticación.
+ * @returns {Array} - Un array de datos del usuario seleccionado.
+ */
+export const selectUserByToken = async () => {
+  // Configuración de los headers para la solicitud HTTP
   let config = {
     headers: {
       "Content-Type": "application/json",
@@ -140,13 +153,21 @@ export const selectUserByToken = async (token) => {
   };
 
   try {
-    const urlWhitToken = `${urlLogin}?token=${token}`;
+    // Obtener el token almacenado en el localStorage
+    const token = localStorage.getItem("token");
 
-    let response = await axios.get(urlWhitToken, config);
-    // Verifica si response.data es un array, si no lo es, devuelve un array vacío.
+    // Construir la URL con el token incluido como parámetro
+    const urlWithToken = `${urlLogin}?token=${token}`;
+
+    // Realizar una solicitud GET utilizando axios
+    let response = await axios.get(urlWithToken, config);
+
+    // Devolver los datos de respuesta
     return response.data;
   } catch (error) {
+    // Manejar cualquier error que ocurra durante la solicitud
     console.error("Error al obtener los datos:", error);
+    // Devolver un array vacío en caso de error
     return [];
   }
 };

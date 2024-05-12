@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import axios from "axios";
 import "./Feedback.css";
 import ViewAdminFeedback from "./ViewAdminFeedback";
 import ViewUserFeedback from "./ViewUserFeedback";
@@ -9,7 +8,6 @@ import {
   deleteByIDToBD,
   selectToBD,
   urlFeedback,
-  SuccessAlert,
   selectUserByToken,
   ErrorAlert,
 } from "../../GlobalVariables";
@@ -18,7 +16,7 @@ let timeWaitAlert = 8000;
 
 const Feedback = () => {
   // -------------------------------------------------------------
-  // Variables basura que hay q borrar solo son para probar
+  // Se usara para optener los datos de la persona activa
   // -------------------------------------------------------------
   const [usuarioActivo, setUsuarioActivo] = useState("User");
 
@@ -36,24 +34,29 @@ const Feedback = () => {
     rating: "",
   });
 
+  /**
+   * Función asincrónica para obtener y establecer el usuario activo utilizando el token de autenticación.
+   */
   const GetUserActive = async () => {
-    const token = localStorage.getItem("token");
-    const user = await selectUserByToken(token);
-    setUsuarioActivo(user.firstName);
+    const user = await selectUserByToken();
+    setUsuarioActivo(user);
   };
 
-  // -------------------------------------------------------------
-  // Cada vez que carga la pantalla
-  // -------------------------------------------------------------
+  /**
+   * Efecto secundario que se ejecuta al montar el componente para obtener el usuario activo y seleccionar los comentarios de la base de datos.
+   * El segundo argumento vacío asegura que se llame solo una vez al cargar la página.
+   */
   useEffect(() => {
+    // Llamar a la función para obtener y establecer el usuario activo
     GetUserActive();
 
+    // Llamar a la función para seleccionar los comentarios de la base de datos
     selectComentariosBD();
-  }, []); // El segundo argumento vacío asegura que se llame solo una vez al cargar la página
+  }, []);
 
-  // -------------------------------------------------------------
-  // Crea los comentarios en la base de datos
-  // -------------------------------------------------------------
+  /**
+   * Función asincrónica para crear un nuevo comentario en la base de datos.
+   */
   const createComentariosBD = async () => {
     const newComentario = {
       comentario: inputData.comentario,
@@ -73,9 +76,9 @@ const Feedback = () => {
     }, timeWaitAlert);
   };
 
-  // -------------------------------------------------------------
-  // Cambia los numeros por estrellas para mostrar
-  // -------------------------------------------------------------
+  /**
+   * Función asincrónica para cambiar los numeros por estrellas para mostrar
+   */
   const renderStars = (rating) => {
     const stars = [];
 
@@ -98,52 +101,64 @@ const Feedback = () => {
     return stars;
   };
 
-  // -------------------------------------------------------------
-  // Carga los comentarios
-  // -------------------------------------------------------------
+  /**
+   * Función asincrónica para seleccionar comentarios de la base de datos.
+   */
   const selectComentariosBD = async () => {
     const response = await selectToBD(urlFeedback);
     setshowComentarios(response);
   };
 
-  // -------------------------------------------------------------
-  // Borra un comentario
-  // -------------------------------------------------------------
+  /**
+   * Función asincrónica para eliminar un comentario de la base de datos.
+   * @param {string} id - El ID del comentario que se va a eliminar.
+   */
   const deleteComentariosBD = async (id) => {
-    deleteByIDToBD(urlFeedback, id).then(() => {
-      // Si la eliminación tiene éxito, llama al método selectComentariosBD.
+    try {
+      // Eliminar el comentario de la base de datos por su ID
+      await deleteByIDToBD(urlFeedback, id);
+
+      // Si la eliminación tiene éxito, seleccionar los comentarios actualizados
       selectComentariosBD();
-    });
+    } catch (error) {
+      // Manejar cualquier error que ocurra durante la eliminación del comentario
+      console.error("Error al eliminar el comentario:", error);
+    }
   };
 
-  // -------------------------------------------------------------
-  // Llama a crear el comentario con la info del form
-  // -------------------------------------------------------------
+  /**
+   * Función para manejar la presentación de datos del formulario y llamar a la función para crear un nuevo comentario.
+   * @param {Event} event - El evento del formulario.
+   */
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    // Verificar si se proporcionaron datos para la calificación y el comentario
     if (!inputData.rating || !inputData.comentario) {
+      // Mostrar un mensaje de error si no se proporcionaron los datos requeridos
       setshowErroresForm(
         <ErrorAlert message="Debe llenar las estrellas y el comentario" />
       );
       return;
     }
 
+    // Limpiar el mensaje de error
     setshowErroresForm("");
+    // Llamar a la función para crear un nuevo comentario
     createComentariosBD();
   };
 
   return (
     <>
-      {usuarioActivo === "Admin" && (
+      {usuarioActivo === "Administrator" && (
         <ViewAdminFeedback renderStars={renderStars} />
       )}
 
-      {usuarioActivo === "User" && (
+      {usuarioActivo === "Client" && (
         <ViewUserFeedback renderStars={renderStars} />
       )}
 
-      {usuarioActivo !== "Admin" && usuarioActivo !== "User" && (
+      {usuarioActivo !== "Administrator" && usuarioActivo !== "Client" && (
         <ViewNoneloginFeedback
           handleSubmit={handleSubmit}
           setInputData={setInputData}

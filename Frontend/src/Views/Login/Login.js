@@ -1,13 +1,14 @@
 // Import React and other necessary libraries
 import React, { useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, redirect } from "react-router-dom";
 import "./Login.css"; // Import the CSS module
 import {
   createToBD,
   deleteByIDToBD,
   selectToBD,
   urlLogin,
+  redirectRegister,
   SuccessAlert,
   ErrorAlert,
 } from "../../GlobalVariables";
@@ -32,65 +33,61 @@ const Login = () => {
         error.response.status >= 400 &&
         error.response.status <= 500
       ) {
-        setError(error.response.data.message);
+        setError(<ErrorAlert message={error.response.data.message} />);
       }
     }
   };
 
   return (
-    <div className=".wrapper">
-      <form onSubmit={handleSubmit}>
-        <p className="formLogin">Login to Your Account</p>
-        <div className="inputBox">
-          <input
-            type="email"
-            placeholder="Email"
-            name="email"
-            required
-            onChange={handleChange}
-            value={data.email}
-            className="input"
-          />
+    <div className="login_container">
+      <div className="login_form_container">
+        <div className="left">
+          <h1>No tienes cuenta</h1>
+          <Link to={redirectRegister}>
+            <button type="button" className="white_btn">
+              Registrarse
+            </button>
+          </Link>
         </div>
-        <div className="inputBox">
-          <input
-            type="password"
-            placeholder="Password"
-            name="password"
-            required
-            onChange={handleChange}
-            value={data.password}
-            className="input"
-          />
+        <div className="right">
+          <form className="form_container" onSubmit={handleSubmit}>
+            <h1>Inicia sesión en tu cuenta</h1>
+            <input
+              type="email"
+              placeholder="Correo Electrónico"
+              name="email"
+              onChange={handleChange}
+              value={data.email}
+              required
+              className="input"
+            />
+            <input
+              type="password"
+              placeholder="Contraseña"
+              name="password"
+              onChange={handleChange}
+              value={data.password}
+              required
+              className="input"
+            />
+            <div className="inputBox">
+              <select
+                name="role"
+                onChange={handleChange}
+                value={data.role}
+                className="input"
+              >
+                <option value={"Client"}>Cliente</option>
+                <option value={"Staff"}>Personal</option>
+              </select>
+            </div>
+            {error && <div className="errorMsg">{error}</div>}
+            <button type="submit" className="form_btn">
+              Iniciar sesión
+            </button>
+          </form>
         </div>
-        <div className="inputBox">
-          <select
-            name="role"
-            onChange={handleChange}
-            value={data.role}
-            className="input"
-          >
-            <option className="Client" value={"Client"}>
-              Client
-            </option>
-            <option className="Staff" value={"Staff"}>
-              Staff
-            </option>
-          </select>
-        </div>
-        {error && <div className="errorMsg">{error}</div>}
-        <button type="submit" className="btn">
-          Log In
-        </button>
-        <div className="registerLink">
-          <p>
-            Don’t have an account?{" "}
-            <Link to="/SignIn" className="link">
-              Register
-            </Link>
-          </p>
-        </div>
-      </form>
+      </div>
     </div>
   );
 };
