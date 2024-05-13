@@ -7,9 +7,15 @@ const ViewUserAppointment = ({
   handleSubmitSearch,
   showErrorSearch,
   reserveAsClient,
+  showAlerts,
 }) => {
   return (
     <div className="AppointmentStyle">
+      {/* para mostrar mensajes */}
+      <div className={`m-4 ${showAlerts ? "" : "d-none"}`}>
+        <div className="mostrar-alert">{showAlerts}</div>
+      </div>
+
       <div className="container mt-5 ">
         <div className="search">
           <form className="form-inline" onSubmit={handleSubmitSearch}>

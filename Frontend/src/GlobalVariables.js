@@ -17,7 +17,12 @@ export const urlClass = `${baseUrl}/class`;
 export const urlLogin = `${baseUrl}/auth`;
 export const urlSingIn = `${baseUrl}/register`;
 
-export const urlReserveClass = `${urlClass}/reserve`;
+export const urlReserveClass = `${baseUrl}/class/reserve`;
+
+// -------------------------------------------------------------
+// constante de cuanto tiempo mostrar los mensajes de error en milisegundos
+// -------------------------------------------------------------
+export const timeWaitAlert = 10000;
 
 // -------------------------------------------------------------
 // funciones globlaes
@@ -65,10 +70,10 @@ export const selectFilterToBD = async (serviceUrl, searchBy) => {
 };
 
 /**
- * Creates a new document in the MongoDB database via a POST request to the specified service URL.
- * @param {string} serviceUrl - The URL of the service where the document will be created.
- * @param {Object} infoToSave - The data to be saved as the new document.
- * @returns {Promise<void>} A promise that resolves when the document is successfully created, or rejects with an error.
+ * Envía una solicitud POST a la URL del servicio especificado para crear un nuevo documento en la base de datos MongoDB.
+ * @param {string} serviceUrl - La URL del servicio donde se creará el documento.
+ * @param {Object} infoToSave - Los datos que se guardarán como el nuevo documento.
+ * @returns {Promise<JSX.Element>} Una promesa que se resuelve con un mensaje de éxito o error después de intentar crear el documento.
  */
 export const createToBD = async (serviceUrl, infoToSave) => {
   try {
@@ -79,18 +84,37 @@ export const createToBD = async (serviceUrl, infoToSave) => {
     };
 
     // Send a POST request to the service URL with the provided data
-    await axios.post(serviceUrl, infoToSave, config);
+    const response = await axios.post(serviceUrl, infoToSave, config);
 
-    const message = <SuccessAlert message="Se ha creado correctamente" />;
+    //----------------------------------------------------------------------------------------------
+    // borrar al terminar el desarrollo
+    console.log("log del createToBD cuando se hizo con exito ", response);
+    //----------------------------------------------------------------------------------------------
+
+    const message = (
+      <SuccessAlert
+        message={response.data.message || "Se ha creado correctamente"}
+      />
+    );
+
     // Show success message
     return message;
   } catch (error) {
-    // Log any errors that occur during the creation process
-    console.error("Error al insertar documento en MongoDB:", error);
-    const errorMessage = error.message || "Error desconocido";
-    const message = <ErrorAlert message={errorMessage} />;
-    // Show error message
-    return message;
+    if (error.response && error.response.data && error.response.data.error) {
+      // Si el error proviene del servidor y contiene un mensaje de error
+      console.error("Error al insertar documento en MongoDB:", error);
+      const errorMessage = error.response.data.error;
+      // Aquí puedes usar el mensaje de error para mostrarlo en tu aplicación
+      console.error("Mensaje de error:", errorMessage);
+      const message = <ErrorAlert message={errorMessage} />;
+      return message;
+    } else {
+      // Para errores no relacionados con el servidor, usa el mensaje de error predeterminado
+      const errorMessage = error.message || "Error desconocido";
+      console.error("Error desconocido:", errorMessage);
+      console.error("Mensaje de error:", errorMessage);
+      const message = <ErrorAlert message={errorMessage} />;
+    }
   }
 };
 
@@ -102,16 +126,15 @@ export const createToBD = async (serviceUrl, infoToSave) => {
  */
 export const deleteByIDToBD = async (url, id) => {
   // Se muestra un mensaje de confirmación al usuario antes de proceder con el borrado.
-  const confirmacion = window.confirm("¿Está seguro de borrar el comentario?");
+  const confirmacion = window.confirm("¿Está seguro que desea de borrarlo?");
 
   if (confirmacion) {
-    // Se construye la URL completa para la solicitud DELETE.
     const serviceUrl = `${url}/${id}`;
     try {
-      // Se realiza la solicitud DELETE utilizando Axios.
       await axios.delete(serviceUrl);
       // Se muestra una alerta indicando que el borrado fue exitoso.
-      alert("Borrado con éxito");
+      const message = <SuccessAlert message="Borrado con éxito" />;
+      return message;
     } catch (error) {
       // Manejo de errores según el tipo de error generado.
       if (error.response) {
@@ -120,23 +143,33 @@ export const deleteByIDToBD = async (url, id) => {
           "Error en la respuesta del servidor:",
           error.response.data
         );
-        alert("Error: No se pudo borrar la variable.");
+        const errorMessage =
+          error.response.data.error || "Error: No se pudo borrar.";
+        const message = <ErrorAlert message={errorMessage} />;
+        return message;
       } else if (error.request) {
         // La solicitud se realizó pero no se recibió respuesta.
         console.error("No se recibió respuesta del servidor:", error.request);
-        alert("Error: No se pudo conectar al servidor.");
+        const message = (
+          <ErrorAlert message="Error: No se pudo conectar al servidor." />
+        );
+        return message;
       } else {
         // Error durante la configuración de la solicitud.
         console.error(
           "Error durante la configuración de la solicitud:",
           error.message
         );
-        alert("Error: Ocurrió un problema durante la solicitud.");
+        const message = (
+          <ErrorAlert message="Error: Ocurrió un problema durante la solicitud." />
+        );
+        return message;
       }
     }
   } else {
     // Se muestra un mensaje indicando que la acción fue cancelada por el usuario.
-    alert("Acción cancelada.");
+    const message = <ErrorAlert message="Acción cancelada." />;
+    return message;
   }
 };
 

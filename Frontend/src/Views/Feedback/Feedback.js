@@ -10,21 +10,21 @@ import {
   urlFeedback,
   selectUserByToken,
   ErrorAlert,
+  timeWaitAlert,
 } from "../../GlobalVariables";
-
-let timeWaitAlert = 8000;
 
 const Feedback = () => {
   // -------------------------------------------------------------
   // Se usara para optener los datos de la persona activa
   // -------------------------------------------------------------
-  const [usuarioActivo, setUsuarioActivo] = useState("User");
+  const [usuarioActivo, setUsuarioActivo] = useState("");
 
   // -------------------------------------------------------------
   // Estas se mostraran en el HTML
   // -------------------------------------------------------------
   const [showComentarios, setshowComentarios] = useState("");
   const [showErroresForm, setshowErroresForm] = useState("");
+  const [showAlerts, setshowAlerts] = useState("");
 
   // -------------------------------------------------------------
   // Seran input
@@ -39,7 +39,7 @@ const Feedback = () => {
    */
   const GetUserActive = async () => {
     const user = await selectUserByToken();
-    setUsuarioActivo(user);
+    // setUsuarioActivo(user);
   };
 
   /**
@@ -60,7 +60,7 @@ const Feedback = () => {
   const createComentariosBD = async () => {
     const newComentario = {
       comentario: inputData.comentario,
-      usuario: usuarioActivo,
+      usuario: usuarioActivo.firstName,
       rating: inputData.rating,
     };
 
@@ -114,16 +114,14 @@ const Feedback = () => {
    * @param {string} id - El ID del comentario que se va a eliminar.
    */
   const deleteComentariosBD = async (id) => {
-    try {
-      // Eliminar el comentario de la base de datos por su ID
-      await deleteByIDToBD(urlFeedback, id);
-
-      // Si la eliminación tiene éxito, seleccionar los comentarios actualizados
-      selectComentariosBD();
-    } catch (error) {
-      // Manejar cualquier error que ocurra durante la eliminación del comentario
-      console.error("Error al eliminar el comentario:", error);
-    }
+    // Eliminar el comentario de la base de datos por su ID
+    const response = await deleteByIDToBD(urlFeedback, id);
+    setshowAlerts(response);
+    setTimeout(() => {
+      setshowAlerts("");
+    }, timeWaitAlert);
+    // Si la eliminación tiene éxito, seleccionar los comentarios actualizados
+    await selectComentariosBD();
   };
 
   /**
@@ -150,25 +148,29 @@ const Feedback = () => {
 
   return (
     <>
-      {usuarioActivo === "Administrator" && (
+      {usuarioActivo.role === "Administrator" && (
         <ViewAdminFeedback renderStars={renderStars} />
       )}
 
-      {usuarioActivo === "Client" && (
-        <ViewUserFeedback renderStars={renderStars} />
-      )}
+      {usuarioActivo.role === "Staff" ||
+        (usuarioActivo.role === "Client" && (
+          <ViewUserFeedback renderStars={renderStars} />
+        ))}
 
-      {usuarioActivo !== "Administrator" && usuarioActivo !== "Client" && (
-        <ViewNoneloginFeedback
-          handleSubmit={handleSubmit}
-          setInputData={setInputData}
-          inputData={inputData}
-          showErroresForm={showErroresForm}
-          comentarios={showComentarios}
-          deleteComentario={deleteComentariosBD}
-          renderStars={renderStars}
-        />
-      )}
+      {usuarioActivo.role !== "Administrator" &&
+        usuarioActivo.role !== "Client" &&
+        usuarioActivo.role !== "Staff" && (
+          <ViewNoneloginFeedback
+            handleSubmit={handleSubmit}
+            setInputData={setInputData}
+            inputData={inputData}
+            showErroresForm={showErroresForm}
+            comentarios={showComentarios}
+            deleteComentario={deleteComentariosBD}
+            renderStars={renderStars}
+            showAlerts={showAlerts}
+          />
+        )}
     </>
   );
 };

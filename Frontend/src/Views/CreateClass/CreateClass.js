@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import "./CreateClass.css";
-import ViewStafCreateClass from "./ViewStafCreateClass";
+import ViewStafCreateClass from "./ViewStaffCreateClass";
 import {
   selectUserByToken,
   selectFilterToBD,
@@ -9,9 +9,8 @@ import {
   NotFound,
   SuccessAlert,
   ErrorAlert,
+  timeWaitAlert,
 } from "../../GlobalVariables";
-
-let timeWaitAlert = 8000;
 
 const CreateClass = () => {
   // -------------------------------------------------------------
@@ -31,7 +30,7 @@ const CreateClass = () => {
     service: "",
     date: "",
     hour: "",
-    repeatEveryMinutes: 1,
+    repeatEveryMinutes: 30,
     repeatNTimes: 1,
     repeatWeekly: 1,
     capacity: "",
@@ -87,7 +86,7 @@ const CreateClass = () => {
           "Content-Type": "application/json",
         },
       };
-      console.log(await axios.post(urlClass, newClass, config));
+      await axios.post(urlClass, newClass, config);
       return true; // Retorna true si se crea con éxito
     } catch (error) {
       console.error("Error al insertar documento en MongoDB:", error);
@@ -143,17 +142,19 @@ const CreateClass = () => {
       if (!success) {
         allCreated = false;
         alert(
-          `La clase para ${appointment.date} a las ${appointment.hour} ya existe o hubo un error al crearla.`
+          `No se pudo crear la clase programada para el ${appointment.date} a las ${appointment.hour}. Puede que ya exista una clase en ese horario o haya ocurrido un error en el proceso de creación.`
         );
       }
     }
 
     // Manejo de la confirmación o error en la creación de las citas
     if (allCreated) {
-      setshowErroresForm(<SuccessAlert message="Todos creados con éxito" />);
+      setshowErroresForm(
+        <SuccessAlert message="¡Todas las clases fueron creadas exitosamente!" />
+      );
     } else {
       setshowErroresForm(
-        <ErrorAlert message="Algunas ya existían o hubo un error al crearla." />
+        <ErrorAlert message="No se pudieron crear algunas clases. Es posible que ya existieran o que haya ocurrido un error durante el proceso de creación." />
       );
     }
     setTimeout(() => {
@@ -180,7 +181,9 @@ const CreateClass = () => {
       return;
     }
 
-    const confirmacion = window.confirm("¿Está seguro?");
+    const confirmacion = window.confirm(
+      "¿Está seguro de iniciar la creación de las clases?"
+    );
 
     if (confirmacion) {
       createAppointments();

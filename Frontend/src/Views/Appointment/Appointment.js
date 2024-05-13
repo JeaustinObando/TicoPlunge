@@ -11,15 +11,14 @@ import {
   urlClass,
   NotFound,
   ErrorAlert,
+  timeWaitAlert,
 } from "../../GlobalVariables";
-
-let timeWaitAlert = 8000;
 
 const Appointment = () => {
   // -------------------------------------------------------------
   // Variables basura que hay q borrar solo son para probar
   // -------------------------------------------------------------
-  const [usuarioActivo, setUsuarioActivo] = useState("Client");
+  const [usuarioActivo, setUsuarioActivo] = useState("");
 
   // -------------------------------------------------------------
   // Seran input
@@ -34,13 +33,14 @@ const Appointment = () => {
   // -------------------------------------------------------------
   const [showClasses, setshowClasses] = useState("");
   const [showErrorSearch, setshowErrorSearch] = useState("");
+  const [showAlerts, setshowAlerts] = useState("");
 
   /**
    * Función asincrónica para obtener y establecer el usuario activo utilizando el token de autenticación.
    */
   const GetUserActive = async () => {
     const user = await selectUserByToken();
-    // setUsuarioActivo(user);
+    setUsuarioActivo(user);
   };
 
   /**
@@ -53,7 +53,29 @@ const Appointment = () => {
     selectClassBD();
   }, []);
 
-  const reserveAsClient = async () => {};
+  /**
+   * Reserva una clase como cliente.
+   * @param {string} idClass - El ID de la clase que se va a reservar.
+   */
+  const reserveAsClient = async (idClass) => {
+    const confirmacion = window.confirm("¿Está seguro que desea de borrarlo?");
+
+    if (!confirmacion) {
+      setshowAlerts(<ErrorAlert message={"Accion Cancelada"} />);
+      setTimeout(() => {
+        setshowAlerts("");
+      }, timeWaitAlert);
+      return;
+    }
+
+    const userId = usuarioActivo._id;
+    const classId = idClass;
+    const response = await createToBD(urlReserveClass, { userId, classId });
+    setshowAlerts(response);
+    setTimeout(() => {
+      setshowAlerts("");
+    }, timeWaitAlert);
+  };
 
   const reserveAsAdmin = async () => {};
 
@@ -129,7 +151,7 @@ const Appointment = () => {
 
   return (
     <>
-      {usuarioActivo === "Administrator" ||
+      {usuarioActivo.role === "Administrator" ||
         (usuarioActivo === "Staff" && (
           <ViewAdminAppointment
             showClasses={showClasses}
@@ -137,7 +159,7 @@ const Appointment = () => {
           />
         ))}
 
-      {usuarioActivo === "Client" && (
+      {usuarioActivo.role === "Client" && (
         <ViewUserAppointment
           showClasses={showClasses}
           setInputData={setInputData}
@@ -145,12 +167,13 @@ const Appointment = () => {
           handleSubmitSearch={handleSubmitSearch}
           showErrorSearch={showErrorSearch}
           reserveAsClient={reserveAsClient}
+          showAlerts={showAlerts}
         />
       )}
 
-      {usuarioActivo !== "Administrator" &&
-        usuarioActivo !== "Client" &&
-        usuarioActivo !== "Staff" && (
+      {usuarioActivo.role !== "Administrator" &&
+        usuarioActivo.role !== "Client" &&
+        usuarioActivo.role !== "Staff" && (
           <NotFound mensaje="Por favor, inicia sesión para continuar" />
         )}
     </>

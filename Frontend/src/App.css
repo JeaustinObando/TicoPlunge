@@ -10,6 +10,20 @@ button:active {
 }
 
 /* ---------------------------------------
+--  para que se vean los errores o succes como alertas
+------------------------------------------ */
+.mostrar-alert {
+  position: fixed; /* Para que se muestre en la parte superior de la página */
+  top: 20px; /* Para colocarlo en la parte superior */
+  left: 0; /* Para colocarlo en el borde izquierdo */
+  width: 100%; /* Ancho completo de la pantalla */
+  background-color: transparent; /* Color de fondo rojo (por ejemplo) */
+  padding: 30px; /* Espaciado interno */
+  text-align: center; /* Centrar el texto */
+  z-index: 9999; /* Asegurar que esté en la parte superior */
+}
+
+/* ---------------------------------------
 --  para mensajes de error
 ------------------------------------------ */
 

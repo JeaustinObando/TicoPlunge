@@ -8,9 +8,15 @@ const ViewNoneloginFeedback = ({
   comentarios,
   deleteComentario,
   renderStars,
+  showAlerts,
 }) => {
   return (
     <div className="FeedbackStyle">
+      {/* para mostrar mensajes */}
+      <div className={`m-4 ${showAlerts ? "" : "d-none"}`}>
+        <div className="mostrar-alert">{showAlerts}</div>
+      </div>
+
       <div className="rating-card">
         <form onSubmit={handleSubmit}>
           <div className="text-wrapper">
