@@ -44,7 +44,6 @@ const validate = (data) => {
   const schema = Joi.object({
     email: Joi.string().email().required().label("Email"),
     password: Joi.string().required().label("Password"),
-    role: Joi.string().required().label("Role"),
   });
   return schema.validate(data);
 };

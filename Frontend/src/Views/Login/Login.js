@@ -14,7 +14,7 @@ import {
 } from "../../GlobalVariables";
 
 const Login = () => {
-  const [data, setData] = useState({ email: "", password: "", role: "" });
+  const [data, setData] = useState({ email: "", password: "" });
   const [error, setError] = useState("");
 
   const handleChange = ({ target: { name, value } }) => {
@@ -42,7 +42,7 @@ const Login = () => {
     <div className="login_container">
       <div className="login_form_container">
         <div className="left">
-          <h1>No tienes cuenta</h1>
+          <h1>¿No tienes cuenta?</h1>
           <Link to={redirectRegister}>
             <button type="button" className="white_btn">
               Registrarse
@@ -70,17 +70,7 @@ const Login = () => {
               required
               className="input"
             />
-            <div className="inputBox">
-              <select
-                name="role"
-                onChange={handleChange}
-                value={data.role}
-                className="input"
-              >
-                <option value={"Client"}>Cliente</option>
-                <option value={"Staff"}>Personal</option>
-              </select>
-            </div>
+
             {error && <div className="errorMsg">{error}</div>}
             <button type="submit" className="form_btn">
               Iniciar sesión

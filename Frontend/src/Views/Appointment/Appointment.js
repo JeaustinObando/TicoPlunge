@@ -16,7 +16,7 @@ import {
 
 const Appointment = () => {
   // -------------------------------------------------------------
-  // Variables basura que hay q borrar solo son para probar
+  // Se usara para optener los datos de la persona activa
   // -------------------------------------------------------------
   const [usuarioActivo, setUsuarioActivo] = useState("");
 

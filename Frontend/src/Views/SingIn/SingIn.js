@@ -48,7 +48,7 @@ const SignIn = () => {
       <div className="signup_container">
         <div className="signup_form_container">
           <div className="left">
-            <h1>Ya tienes cuenta</h1>
+            <h1>¿Ya tienes cuenta?</h1>
             <Link to={redirectLogin}>
               <button type="button" className="white_btn">
                 Iniciar sesión

@@ -39,7 +39,7 @@ const Feedback = () => {
    */
   const GetUserActive = async () => {
     const user = await selectUserByToken();
-    // setUsuarioActivo(user);
+    setUsuarioActivo(user);
   };
 
   /**
@@ -158,7 +158,7 @@ const Feedback = () => {
         ))}
 
       {usuarioActivo.role !== "Administrator" &&
-        usuarioActivo.role !== "Client" &&
+        // usuarioActivo.role !== "Client" &&
         usuarioActivo.role !== "Staff" && (
           <ViewNoneloginFeedback
             handleSubmit={handleSubmit}
