@@ -48,17 +48,18 @@ const ViewNoneloginFeedback = ({
             ))}
           </div>
 
-          <div className="input-group-prepend "></div>
-          <textarea
-            type="text"
-            id="inputComentario"
-            className="form-control mt-3"
-            value={inputData.comentario}
-            onChange={(e) =>
-              setInputData({ ...inputData, comentario: e.target.value })
-            }
-            required
-          />
+          <div>
+            <textarea
+              type="text"
+              id="inputComentario"
+              className="m-4"
+              value={inputData.comentario}
+              onChange={(e) =>
+                setInputData({ ...inputData, comentario: e.target.value })
+              }
+              required
+            />
+          </div>
 
           {/* por si hay un error en el form se muetre*/}
           <div className={` m-4 ${showErroresForm ? "" : "d-none"}`}>

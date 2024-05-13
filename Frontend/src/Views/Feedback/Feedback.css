@@ -3,6 +3,8 @@
   color: white;*/
   margin: 0;
   min-height: calc(100vh - 44px);
+  width: 100%;
+  padding: 0;
 }
 /* ---------------------------------------
 --  para mostrar los comentarios
@@ -15,7 +17,7 @@
   position: relative;
   width: auto;
   height: auto;
-  min-width: 15rem;
+  /* min-width: 15rem; */
   min-height: 5rem;
   background: #111827;
   border-radius: 1rem;
@@ -59,29 +61,19 @@
 ------------------------------------------ */
 
 .rating-card {
-  min-width: 80vh;
-
   min-height: 50vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  align-items: center;
+  width: auto;
   background: #111827;
   /* background: linear-gradient(to right bottom, #345995, #253555); */
   padding: 30px 20px;
-  gap: 12px;
   font-family: Arial, Helvetica, sans-serif;
-  box-shadow: 0px 10px 10px rgba(0, 0, 0, 0.058);
 }
 
 .rating-card textarea {
   background-color: transparent;
   color: white;
-  min-width: 80vh;
-  height: 80px;
-  padding: 12px 20px;
-  box-sizing: border-box;
-  resize: none;
+  width: 80%;
+  height: 200px;
 }
 
 .rating-card button {
@@ -93,7 +85,6 @@
 
 .text-wrapper {
   width: 100%;
-  min-width: 60vh;
   height: fit-content;
   display: flex;
   flex-direction: column;
