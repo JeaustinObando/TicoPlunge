@@ -14,7 +14,7 @@ const userSchema = new mongoose.Schema(
       required: true,
       enum: ["Administrator", "Staff", "Client"],
     },
-    creditos: { type: Number, default: 0, min: 0 } // Nuevo campo "creditos"
+    creditos: { type: Number, default: 0, min: 0 }, // Nuevo campo "creditos"
   },
   { strict: "throw" }
 );
@@ -27,6 +27,7 @@ userSchema.methods.generateAuthToken = function () {
       role: this.role,
       email: this.email,
       firstName: this.firstName,
+      creditos: this.creditos,
     },
     process.env.JWTPRIVATEKEY,
     {
@@ -48,7 +49,7 @@ const validate = (data) => {
       .valid("Administrator", "Staff", "Client")
       .required()
       .label("Role"), // Validation for role
-    creditos: Joi.number().min(0).label("Credits") // Validación para el campo "creditos"
+    creditos: Joi.number().min(0).label("Credits"), // Validación para el campo "creditos"
   });
   return schema.validate(data);
 };

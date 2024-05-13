@@ -3,9 +3,34 @@ import { Link } from "react-router-dom";
 import "./Navbar.css";
 
 function Navbar() {
+  const handleLogout = () => {
+    const confirmLogout = window.confirm("¿Estás seguro de que deseas cerrar sesion?");
+    if (confirmLogout) {
+      localStorage.setItem("token", "");
+    }
+  };
   return (
     <div>
       <div className="containe-navbar">
+        <Link to="/Profile" className="link-navbar">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="feather feather-user"
+          >
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          Ver Perfil
+        </Link>
+
         <Link to="/LogIn" className="link-navbar">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -24,6 +49,7 @@ function Navbar() {
           </svg>
           Iniciar Sesión
         </Link>
+
         <Link to="/" className="link-navbar">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -99,6 +125,26 @@ function Navbar() {
             <line x1="3" y1="10" x2="21" y2="10"></line>
           </svg>
           Reservar
+        </Link>
+
+        <Link to="/" className="link-navbar" onClick={handleLogout}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="24"
+            height="24"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="feather feather-log-out"
+          >
+            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+            <polyline points="16 17 21 12 16 7"></polyline>
+            <line x1="21" y1="12" x2="9" y2="12"></line>
+          </svg>
+          Salir
         </Link>
       </div>
     </div>

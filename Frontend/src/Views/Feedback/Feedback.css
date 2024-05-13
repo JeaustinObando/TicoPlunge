@@ -1,9 +1,8 @@
 .FeedbackStyle {
-  /* background-color: rgb(16, 15, 15); 
-  min-height: calc(100vh - 44px);
+  /* background: linear-gradient(to bottom, #111827, #f5f5f5); 
   color: white;*/
   margin: 0;
-  /* background: linear-gradient(to bottom, #111827, #f5f5f5); */
+  min-height: calc(100vh - 44px);
 }
 /* ---------------------------------------
 --  para mostrar los comentarios
@@ -61,6 +60,7 @@
 
 .rating-card {
   min-width: 80vh;
+
   min-height: 50vh;
   display: flex;
   flex-direction: column;

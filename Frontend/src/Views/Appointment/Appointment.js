@@ -4,7 +4,6 @@ import ViewAdminAppointment from "./ViewAdminAppointment";
 import ViewUserAppointment from "./ViewUserAppointment";
 import {
   createToBD,
-  deleteByIDToBD,
   selectFilterToBD,
   urlReserveClass,
   selectUserByToken,
@@ -58,7 +57,7 @@ const Appointment = () => {
    * @param {string} idClass - El ID de la clase que se va a reservar.
    */
   const reserveAsClient = async (idClass) => {
-    const confirmacion = window.confirm("¿Está seguro que desea de borrarlo?");
+    const confirmacion = window.confirm("¿Está seguro que desea de reservar?");
 
     if (!confirmacion) {
       setshowAlerts(<ErrorAlert message={"Accion Cancelada"} />);
