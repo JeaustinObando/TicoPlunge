@@ -153,7 +153,7 @@ const Feedback = () => {
       )}
 
       {usuarioActivo.role === "Staff" ||
-        (usuarioActivo.role === "sa" && ( //(usuarioActivo.role === "Client" && (
+        (usuarioActivo.role === "se" && ( //(usuarioActivo.role === "Client" && (
           <ViewUserFeedback renderStars={renderStars} />
         ))}
 

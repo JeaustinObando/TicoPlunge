@@ -107,7 +107,15 @@ const Appointment = () => {
             { usuario: { $regex: inputData.search, $options: "i" } },
             { hour: { $regex: inputData.search, $options: "i" } },
             { service: { $regex: inputData.search, $options: "i" } },
-            { capacity: { $regex: inputData.search, $options: "i" } },
+            {
+              $expr: {
+                $cond: {
+                  if: { $isNumber: "$capacity" }, // Verificar si el campo capacity es un número
+                  then: { $eq: ["$capacity", parseInt(inputData.search)] },
+                  else: { $eq: ["", ""] }, // Si es un string, devuelve un filtro vacío
+                },
+              },
+            },
           ],
         },
         { date: { $gt: fechaActual } }, // Filtra las clases con fecha mayor a la fecha actual

@@ -61,8 +61,8 @@
 .input {
   outline: none;
   border: none;
-  width: 90%; /* Ancho relativo */
-  max-width: 370px;
+  max-width: 95%; /* Ancho relativo */
+  width: 370px;
   padding: 15px;
   border-radius: 10px;
   background-color: #edf5f3;
@@ -77,8 +77,8 @@
   padding: 12px 0;
   background-color: white;
   border-radius: 20px;
-  width: 90%; /* Ancho relativo */
-  max-width: 180px;
+  max-width: 90%; /* Ancho relativo */
+  width: 180px;
   font-weight: bold;
   font-size: 14px;
   cursor: pointer;

@@ -26,8 +26,8 @@ const ViewUserAppointment = ({
                 id="searchInput"
                 placeholder="Ingrese su búsqueda"
                 value={inputData.search}
-                onChange={(e) =>
-                  setInputData({ ...inputData, search: e.target.value })
+                onChange={
+                  (e) => setInputData({ ...inputData, search: e.target.value }) // Corrección aquí
                 }
               />
             </div>

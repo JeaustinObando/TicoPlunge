@@ -7,7 +7,6 @@ router.get("/", async (req, res) => {
   try {
     // Obtenemos el filtro de la consulta
     const filtro = req.query.filtro;
-
     // Si hay un filtro en la consulta, lo utilizamos en la consulta a la base de datos
     let clases;
     if (filtro) {
