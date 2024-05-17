@@ -58,7 +58,7 @@ const Home = () => {
             </div>
           </div>
           <div>
-            <div>
+            <div className="redes">
               <h2>¡Únete a nuestra comunidad!</h2>
               <p>Síguenos en nuestras redes sociales.</p>
               <a

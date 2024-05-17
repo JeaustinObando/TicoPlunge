@@ -9,26 +9,44 @@
   width: 100%;
   height: 100%;
   /* Add your background pattern here */
-  background: linear-gradient(45deg, #bcdbef 25%, transparent 25%, transparent 50%, #bcdbef 50%, #8ea2ae 75%, transparent 75%, transparent);
-  background-size: 20px 20px;
+  width: 100%;
+  height: 100%;
+  --s: 37px; /* control the size */
+
+  --c: #0000, rgb(0, 67, 99) 0.5deg 119.5deg, #0000 120deg;
+  --g1: conic-gradient(from 60deg at 56.25% calc(425% / 6), var(--c));
+  --g2: conic-gradient(from 180deg at 43.75% calc(425% / 6), var(--c));
+  --g3: conic-gradient(from -60deg at 50% calc(175% / 12), var(--c));
+  background: var(--g1), var(--g1) var(--s) calc(1.73 * var(--s)), var(--g2),
+    var(--g2) var(--s) calc(1.73 * var(--s)), var(--g3) var(--s) 0,
+    var(--g3) 0 calc(1.73 * var(--s)) #ecbe13;
+  background-size: calc(2 * var(--s)) calc(3.46 * var(--s));
 
 }
 
 .todo{
-    background-color: #ffffff;
-    margin: 0px 50px;
+    background-color: rgb(255, 255, 255);
+    margin: 0px 100px;
     min-height: 100vh;
 }
 
 .quienes-somos{
-    border-top: 3px double orange;
-    border-right: 3px double brown;
-    border-bottom: 3px double brown;
-    border-left: 3px double brown;
-    width: 100%;
-    border-radius: 89px;
-    background: linear-gradient(145deg, #e6e6e6, #ffffff);
-    box-shadow:  34px 34px 67px #b0b0b0,-34px -34px 67px #ffffff;
+  border-top: 3px double orange;
+  border-right: 3px double brown;
+  border-bottom: 3px double brown;
+  border-left: 3px double brown;
+  margin: 10px;
+  padding: 40px;
+  width: 100%;
+  border-radius: 89px;
+
+}
+
+.redes{
+  border: 3px double black;
+  margin: 0px 25%;
+  padding: 10px;
+  width: 50%;
 }
 
 .visit-comunity{
@@ -43,15 +61,12 @@
 
 .titulo{
     color: #000000;
-    margin: 0px 25%;
-    padding: 10px;
-    border: 2px solid black;
+    border: 5px solid black;
     background-color: azure;
     border-radius: 0px;
-    background: linear-gradient(145deg, #e6e6e6, #ffffff);
-    box-shadow:  34px 34px 67px #b0b0b0,-34px -34px 67px #ffffff;
-    justify-content: center;
     width: 50%;
+    position: 0;
+    margin: 0px 25%;
 }
 
 .comunity{
@@ -70,26 +85,6 @@
    background: linear-gradient(145deg, #e6e6e6, #ffffff);
    box-shadow:  34px 34px 67px #b0b0b0,-34px -34px 67px #ffffff;
 }
-
-.colorback {
-    width: 100%;
-    height: 100%;
-    --s: 60px;
-    --c1: #180a22;
-    --c2: #5b42f3;
-    --_g: radial-gradient(
-      25% 25% at 25% 25%,
-      var(--c1) 99%,
-      rgba(0, 0, 0, 0) 101%
-    );
-    background: var(--_g) var(--s) var(--s) / calc(2 * var(--s))
-        calc(2 * var(--s)),
-      var(--_g) 0 0 / calc(2 * var(--s)) calc(2 * var(--s)),
-      radial-gradient(50% 50%, var(--c2) 98%, rgba(0, 0, 0, 0)) 0 0 / var(--s)
-        var(--s),
-      repeating-conic-gradient(var(--c2) 0 50%, var(--c1) 0 100%)
-        calc(0.5 * var(--s)) 0 / calc(2 * var(--s)) var(--s);
-  }
 
 
 main article {
