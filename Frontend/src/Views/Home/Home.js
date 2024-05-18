@@ -13,7 +13,7 @@ const Home = () => {
             <p>Explora todo lo que tenemos para ofrecerte.</p>
             <div>
               <i>• Cold Plunge</i>
-              <p>• Pilates</p>
+              <p>• Pil ates</p>
               <p>• Zumba</p>
               <p>• Yoga</p>
               <p>• Boxeo</p>

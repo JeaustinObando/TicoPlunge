@@ -28,7 +28,7 @@
 }
 
 .bg-image {
-  background-image: url("../../Imagenes/img1.jpg");
+  background-image: url("../../Imagenes/");
   background-size: cover;
   min-height: 50vh;
 }
