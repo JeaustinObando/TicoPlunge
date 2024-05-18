@@ -1,13 +1,10 @@
 
 
 .homeStyle{
-  width: 100%;
   min-height: calc(100vh - 44px);
   background-color: #5c1d1d;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
   /* Add your background pattern here */
   width: 100%;
   height: 100%;
@@ -28,6 +25,21 @@
     background-color: rgb(255, 255, 255);
     margin: 0px 100px;
     min-height: 100vh;
+}
+
+.bg-image {
+  background-image: url("../../Imagenes/img1.jpg");
+  background-size: cover;
+  min-height: 50vh;
+}
+
+.cold-plunge{
+  border: 3px double black;
+  border-radius: 80px;
+  margin: 0px 0px;
+  padding: 10px 0px;
+  width: 10%;
+  
 }
 
 .quienes-somos{
@@ -63,7 +75,7 @@
     color: #000000;
     border: 5px solid black;
     background-color: azure;
-    border-radius: 0px;
+    border-radius: 10px;
     width: 50%;
     position: 0;
     margin: 0px 25%;

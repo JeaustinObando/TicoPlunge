@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 
+
 const Home = () => {
   return (
     <div className="homeStyle">
@@ -20,6 +21,14 @@ const Home = () => {
             <Link to="/AppointmentForm" className="btn btn-primary">
               RESERVA YA!!
             </Link>
+          </div>
+
+          <div className="row">
+            <div className="cold-plunge  col">
+              <h2>COLD PLUNGE</h2>
+            </div>
+            <div className="col bg-image">
+            </div>
           </div>
 
           <div className="row">
